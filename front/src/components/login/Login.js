@@ -16,7 +16,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/loginpage/process/login', { id, password }, { withCredentials: true });
+      const response = await axios.post('/process/login', { id, password }, { withCredentials: true });
 
       if (response.data.success) {
         // 로그인 성공 시 sessionStorage에 loggedIn 값 저장

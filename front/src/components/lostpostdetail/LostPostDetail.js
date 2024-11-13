@@ -20,7 +20,7 @@ const LostPostDetail = () => {
 
   useEffect(() => {
     axios
-      .get('/api/lost-item-detail')
+      .get('/lost-item-detail')
       .then((response) => {
         setLostItemData(response.data);
       })
@@ -42,8 +42,7 @@ const LostPostDetail = () => {
     } else if (lostItemData.storageLocation === '신공학관') {
       return <Map selectedLocation="newengineering" />;
     } else {
-      // return <div className="LostPostDetail_map_message">보관 장소에 대한 지도가 없습니다.</div>;
-      return <Map selectedLocation="infoculture" />;
+      return <div className="LostPostDetail_map_message">보관 장소에 대한 지도가 없습니다.</div>;
     }
   };
 

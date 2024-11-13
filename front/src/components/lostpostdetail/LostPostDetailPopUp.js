@@ -105,7 +105,7 @@ const LostPostDetailPopUp = ({ itemType, storageLocation, lostTime, lostLocation
     }
 
     try {
-      const response = await axios.post('/api/pickup-request', {
+      const response = await axios.post('/pickup-request', {
         itemType,
         storageLocation,
         lostTime,

@@ -7,7 +7,7 @@ const PersonalInfo = () => {
     userImage: '',
     name: '',
     major: '',
-    studentId: '',
+    id: '',
   });
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const PersonalInfo = () => {
           userImage: response.data.userImage || '이미지', // 이미지 URL
           name: response.data.name || '이름 없음', // 이름
           major: response.data.major || '전공 없음', // 전공
-          studentId: response.data.studentId || '학번 없음', // 학번
+          id: response.data.id || '학번 없음', // 학번
         });
       })
       .catch((error) => {
@@ -56,7 +56,7 @@ const PersonalInfo = () => {
           <div className="PersonalInfo_details">
             <div className="PersonalInfo_name">{userInfo.name || '이름'}</div>
             <div className="PersonalInfo_major">{userInfo.major || '전공'}</div>
-            <div className="PersonalInfo_student-id">{userInfo.studentId || '학번'}</div>
+            <div className="PersonalInfo_id">{userInfo.id || '학번'}</div>
           </div>
           <div className="PersonalInfo_logout-button_layout">
             <button className="PersonalInfo_logout-button" onClick={handleLogout}>
