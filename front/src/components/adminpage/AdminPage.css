@@ -1,0 +1,74 @@
+.AdminPage_all_layout {
+  display: grid;
+  justify-items: center;
+  margin-bottom: 100px;
+}
+
+.AdminPage_itemLocation_all {
+  height: 160px;
+  display: grid;
+  align-content: space-around;
+  padding: 10px 0;
+  width: 90%;
+  position: relative;
+}
+
+.AdminPage_bigname {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333333;
+}
+
+.AdminPage_icon_layout {
+  display: flex;
+  justify-content: space-around;
+}
+
+.AdminPage_categoryImg {
+  height: 85px;
+}
+
+.AdminPage_map_all {
+  width: 90%;
+}
+
+.AdminPage_map {
+  height: 250px;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
+  color: #666;
+}
+
+.AdminPage_itemLocation_btn {
+  background-color: #d04020;
+  color: white;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 20px;
+}
+
+.AdminPage_pickup_code_all {
+  width: 90%;
+}
+
+.AdminPage_pickup_code {
+  background-color: #f4f5f6;
+  color: #333333;
+  height: 55px;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  margin-top: 30px;
+}

@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+/* 오버레이 설정 */
+.LostPostDetailPopUp_popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* 배경 어두움 효과 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* 팝업 위로 배치 */
+}
+
+/* 팝업 내용 */
+.LostPostDetailPopUp_popup-content {
+  background-color: white;
+  padding: 18px;
+  border-radius: 5px;
+  width: 350px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.LostPostDetailPopUp_pickupdate_layout,
+.LostPostDetailPopUp_pickuphourminute_layout {
+  display: flex;
+  margin: 10px 0px;
+  gap: 10px;
+}
+
+.LostPostDetailPopUp_pickupdate_layout {
+  margin-top: 20px;
+}
+
+.LostPostDetailPopUp_pickuphourminute_layout {
+  margin-bottom: 20px;
+}
+
+.LostPostDetailPopUp_itemtype {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #333333;
+}
+
+.LostPostDetailPopUp_storageLocation {
+  font-size: 13px;
+  color: #808080;
+  margin-bottom: 10px;
+}
+
+.LostPostDetailPopUp_time {
+  font-size: 15px;
+  color: #333333;
+}
+
+.LostPostDetailPopUp_pickup_btn {
+  background-color: #d04020;
+  color: #f4f5f6;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.LostPostDetailPopUp_time_select {
+  font-family: 'Noto Sans KR', serif;
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: none;
+  background-color: #f4f5f6;
+  color: #333333;
+}

@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+html {
+  box-sizing: border-box;
+}
+
+/* 전역 기본 폰트 설정 */
+body {
+  font-family: 'Noto Sans KR', serif;
+  font-size: 18px; /* 기본 폰트 크기 */
+  font-weight: 500; /* 기본 폰트 두께 */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}

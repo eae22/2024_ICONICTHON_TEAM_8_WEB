@@ -1,0 +1,51 @@
+.PersonalInfo_all {
+  margin: 20px 0px;
+}
+
+.PersonalInfo_content {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.PersonalInfo_right_layout {
+  width: 170px;
+  display: grid;
+  align-content: space-between;
+}
+
+.PersonalInfo_placeholder-image {
+  width: 130px;
+  height: 130px;
+  background-color: #f4f5f6;
+  border-radius: 5px;
+}
+
+.PersonalInfo_name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #4a423d;
+  margin: 10px 0px;
+}
+
+.PersonalInfo_major,
+.PersonalInfo_student-id {
+  font-size: 15px;
+  color: #4a423d;
+  margin: 5px 0px;
+}
+.PersonalInfo_major {
+  margin-top: 10px;
+}
+
+.PersonalInfo_logout-button_layout {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.PersonalInfo_logout-button {
+  background-color: white;
+  border: none;
+  color: #f0c7a9;
+  font-size: 13px;
+  font-weight: 700;
+}

@@ -1,0 +1,30 @@
+.Header_all {
+  display: grid;
+  justify-items: center;
+}
+
+.Header_body {
+  display: grid;
+  justify-content: center;
+  border-bottom: 1px solid #948a85;
+  padding: 15px 0;
+  width: 90%;
+  position: relative; /* 가상 요소의 위치를 기준으로 함 */
+}
+
+.Header_body::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px; /* 그림자의 두께 조정 */
+  box-shadow: 0px 2px 4px rgba(142, 142, 142, 0.2);
+  z-index: -1; /* 요소 뒤로 그림자를 보이게 설정 */
+}
+
+.Header_name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333333;
+}

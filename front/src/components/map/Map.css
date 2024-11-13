@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+/* InfoWindow의 감싸고 있는 최상위 div에 스타일 적용 */
+div[style*='z-index'] {
+  background: transparent !important; /* 기본 배경 제거 */
+  border: none !important; /* 기본 테두리 제거 */
+  box-shadow: none !important; /* 기본 그림자 제거 */
+  padding: 0 !important;
+}
+
+.Map_custom-info-window {
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Noto Sans KR', serif;
+  color: #333;
+  text-align: center;
+  border: none;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+}

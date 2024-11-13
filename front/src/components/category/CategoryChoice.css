@@ -1,0 +1,77 @@
+.CategoryChoice_all_layout {
+  display: grid;
+  justify-items: center;
+  margin-bottom: 100px;
+}
+
+.CategoryChoice_itemType_all,
+.CategoryChoice_itemLocation_all {
+  height: 160px;
+  display: grid;
+  align-content: space-around;
+  padding: 10px 0;
+  width: 90%;
+  position: relative;
+}
+
+.CategoryChoice_itemType_all {
+  border-bottom: 1px solid #948a85;
+}
+
+.CategoryChoice_itemType_all::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px; /* 그림자의 두께 조정 */
+  box-shadow: 0px 2px 4px rgba(142, 142, 142, 0.2);
+  z-index: -1; /* 요소 뒤로 그림자를 보이게 설정 */
+}
+
+.CategoryChoice_bigname {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333333;
+}
+
+.CategoryChoice_icon_layout {
+  display: flex;
+  justify-content: space-around;
+}
+
+.CategoryChoice_categoryImg {
+  height: 85px;
+}
+
+.CategoryChoice_map_phone_all {
+  width: 90%;
+}
+
+.CategoryChoice_map {
+  height: 250px;
+  width: 100%;
+}
+
+.CategoryChoice_location_phone {
+  font-size: 13px;
+  font-weight: 700;
+  color: #948a85;
+  display: flex;
+  justify-self: flex-end;
+  margin: 10px 5px;
+}
+
+.CategoryChoice_itemLocation_btn {
+  background-color: #d04020;
+  color: white;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 10px;
+}
