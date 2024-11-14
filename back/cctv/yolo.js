@@ -11,7 +11,7 @@ const db_config = require("../config/db_config.json"); // JSON 파일에서 MySQ
 const upload = multer();
 
 // YOLOv8 Colab API URL (ngrok URL)
-const YOLO_API_URL = "https://a684-34-16-162-227.ngrok-free.app/detect"; // Flask 서버의 ngrok URL로 변경
+const YOLO_API_URL = "https://d1a0-34-139-116-187.ngrok-free.app/detect"; // Flask 서버의 ngrok URL로 변경
 
 // YOLO 탐지 API
 router.post("/yolo/detect", upload.single("image"), async (req, res) => {
