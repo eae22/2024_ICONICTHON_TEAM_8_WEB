@@ -5,7 +5,6 @@
 }
 
 .AdminPage_itemLocation_all {
-  height: 160px;
   display: grid;
   align-content: space-around;
   padding: 10px 0;
@@ -19,9 +18,15 @@
   color: #333333;
 }
 
+.AdminPage_icon_etc_layout {
+  height: 220px;
+  display: grid;
+  align-content: space-evenly;
+}
+
 .AdminPage_icon_layout {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .AdminPage_categoryImg {
@@ -41,20 +46,6 @@
   color: #666;
 }
 
-.AdminPage_itemLocation_btn {
-  background-color: #d04020;
-  color: white;
-  padding: 7px 10px;
-  border: none;
-  border-radius: 5px;
-  width: 100%;
-  cursor: pointer;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  margin-top: 20px;
-}
-
 .AdminPage_pickup_code_all {
   width: 90%;
 }
@@ -70,5 +61,4 @@
   display: flex;
   align-items: center;
   padding-left: 20px;
-  margin-top: 30px;
 }
