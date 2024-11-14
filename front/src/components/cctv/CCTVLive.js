@@ -85,32 +85,19 @@ function CCTVLive() {
       }
       const data = await response.json();
       setDetectedClasses(data.detections || []);
-
-      if (data.detections && data.detections.length > 0) {
-        const detectedItem = data.detections[0];
-        setItemType(detectedItem.class || "미탐지");
-        setCaptureTime(new Date().toISOString()); // 이미지 캡쳐 시간 저장
-        setLostTime(new Date().toISOString()); // lostTime을 이미지 캡처 시간으로 설정
-        saveImage(blob, detectedItem.class); // 이미지 저장
-      }
+      setItemType(data.detections[0]?.class || "미탐지");
+      setCaptureTime(new Date().toISOString()); // 이미지 캡쳐 시간 저장
+      setLostTime(new Date().toISOString()); // lostTime을 이미지 캡처 시간으로 설정
+      saveImage(blob); // 이미지 저장
     } catch (error) {
       console.error(`YOLO API 요청 실패: ${error.message}`);
     }
   };
 
-  // 주기적으로 프레임 전송
-  useEffect(() => {
-    const interval = setInterval(() => {
-      sendFrameToServer();
-    }, 5000); // 5초마다 호출
-    return () => clearInterval(interval);
-  }, []);
-
   // 이미지를 서버로 저장
-  const saveImage = async (imageBlob, detectedClassName) => {
+  const saveImage = async (imageBlob) => {
     const formData = new FormData();
     formData.append("image", imageBlob, "frame.jpg");
-    formData.append("name", detectedClassName);
 
     try {
       const response = await fetch(SAVE_IMAGE_URL, {
@@ -119,7 +106,6 @@ function CCTVLive() {
       });
       if (response.status === 200) {
         console.log("이미지 저장 성공");
-        fetchStoredImages(); // 저장된 이미지 목록 갱신
       } else {
         console.error("이미지 저장 실패");
       }
@@ -142,17 +128,12 @@ function CCTVLive() {
     }
   };
 
-  // 컴포넌트 마운트 시 저장된 이미지 가져오기
-  useEffect(() => {
-    fetchStoredImages();
-  }, []);
-
   // 게시판에 데이터 전송
-  const postToBoard = async (itemData) => {
+  const postToBoard = async (imageData) => {
     try {
       const response = await fetch(POST_TO_BOARD_URL, {
         method: "POST",
-        body: JSON.stringify(itemData),
+        body: JSON.stringify(imageData),
         headers: {
           "Content-Type": "application/json",
         },
@@ -246,29 +227,20 @@ function CCTVLive() {
 
   // 10분이 지나면 자동으로 백엔드에 저장
   useEffect(() => {
-    if (!captureTime || isClaimed) return;
+    const timePassed = new Date() - new Date(captureTime); // 캡처 시간과 현재 시간 차이 계산
+    if (timePassed > 600000 && !isClaimed) {
+      const itemData = {
+        itemType,
+        lostTime: captureTime,
+        lostLocation,
+        isPosted: true, // 게시됨
+        isClaimed: false, // 회수되지 않음
+        storageLocation,
+      };
 
-    const interval = setInterval(() => {
-      const timePassed = new Date() - new Date(captureTime); // 캡처 시간과 현재 시간 차이 계산
-      if (timePassed > 600000 && !isClaimed) {
-        const itemData = {
-          itemType,
-          lostTime: captureTime,
-          lostLocation,
-          isPosted: true, // 게시됨
-          isClaimed: false, // 회수되지 않음
-          storageLocation,
-        };
-
-        postToBoard(itemData); // 자동으로 10분 후 백엔드에 저장
-        console.log(
-          "10분이 지나 회수되지 않으면 자동으로 백엔드에 저장됩니다."
-        );
-        clearInterval(interval);
-      }
-    }, 60000); // 1분마다 체크
-
-    return () => clearInterval(interval);
+      postToBoard(itemData); // 자동으로 10분 후 백엔드에 저장
+      console.log("10분이 지나 회수되지 않으면 자동으로 백엔드에 저장됩니다.");
+    }
   }, [captureTime, isClaimed]);
 
   return (
