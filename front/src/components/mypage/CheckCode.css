@@ -1,5 +1,3 @@
-/* CheckCode.css */
-
 /* 오버레이 설정 */
 .CheckCode_popup-overlay {
   position: fixed;
@@ -24,8 +22,8 @@
   text-align: center;
 }
 
-/* 제목 스타일 */
-.CheckCode_popup-content h2 {
+/* 메시지 스타일 */
+.CheckCode_message {
   font-size: 18px;
   font-weight: 700;
   color: #333333;
@@ -33,15 +31,16 @@
 }
 
 /* 입력 필드 스타일 */
-.CheckCode_popup-content input {
-  width: calc(100% - 20px);
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
+.CheckCode_input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
-/* 버튼 스타일 */
+/* 확인 버튼 스타일 */
 .CheckCode_confirm-button {
   background-color: #d04020;
   color: #f4f5f6;
@@ -52,9 +51,18 @@
   font-size: 16px;
   font-weight: 700;
   width: 100%;
-  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
 }
 
-.CheckCode_confirm-button:hover {
-  background-color: #c9302c;
+/* 취소 버튼 스타일 */
+.CheckCode_cancel-button {
+  background-color: #f4f5f6;
+  color: #333333;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  width: 100%;
 }

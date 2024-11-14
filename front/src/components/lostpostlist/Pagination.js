@@ -116,11 +116,19 @@ const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
 
   return (
     <div className="pagination-container">
-      <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+      <button
+        className="arrowbutton"
+        onClick={handlePreviousPage}
+        disabled={currentPage === 1}
+      >
         &lt;
       </button>
       {renderPageButtons()}
-      <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+      <button
+        className="arrowbutton"
+        onClick={handleNextPage}
+        disabled={currentPage === totalPages}
+      >
         &gt;
       </button>
     </div>

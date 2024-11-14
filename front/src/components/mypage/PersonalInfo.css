@@ -9,6 +9,7 @@
 
 .PersonalInfo_right_layout {
   width: 170px;
+
   display: grid;
   align-content: space-between;
 }
@@ -42,7 +43,7 @@
 .PersonalInfo_id {
   font-size: 15px;
   color: #4a423d;
-  margin: 5px 0px;
+  margin: 10px 0px;
 }
 .PersonalInfo_major {
   margin-top: 10px;

@@ -75,7 +75,7 @@ function LostPostList() {
             />
           ))
         ) : (
-          <p>게시물 없음</p>
+          <p className="no-posts-message">게시물 없음</p>
         )}
       </div>
       <Pagination

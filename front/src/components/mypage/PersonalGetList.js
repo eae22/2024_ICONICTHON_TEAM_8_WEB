@@ -1,25 +1,27 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import PersonalGetListCard from "./PersonalGetListCard";
-import CheckCode from "./CheckCode";
-import "./PersonalGetList.css";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import PersonalGetListCard from './PersonalGetListCard';
+import CheckCode from './CheckCode';
+import './PersonalGetList.css';
 
 function PersonalGetList() {
-  const [posts, setPosts] = useState([]); // API 데이터 업데이트용
-  const [filteredPosts, setFilteredPosts] = useState([]); // 검색 결과 필터링용
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
-  const [selectedPostId, setSelectedPostId] = useState(null); // 수취확인 버튼 클릭 시 저장되는 ID
+  const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState(null); // 클릭한 항목의 ID 저장
 
-  // 데이터 Fetch (API로부터) 개인 물품 데이터 personal-get-list 가져오기
   useEffect(() => {
+    console.log('PersonalGetList useEffect 실행');
     setTimeout(() => {
-      setIsLoading(false); // 데이터를 로드한 후 1초 후 로딩 상태를 false로 변경
+      setIsLoading(false);
+      console.log('isLoading 상태 변경: false');
     }, 1000);
 
     axios
-      .get("/personal-get-list")
+      .get('/personal-get-list')
       .then((response) => {
-        console.log(response.data); // API에서 반환된 데이터를 확인
+        console.log('API 응답:', response.data);
         const data = response.data.map((item) => ({
           id: item.id,
           itemImage: item.itemImage,
@@ -29,45 +31,49 @@ function PersonalGetList() {
         }));
         setPosts(data);
         setFilteredPosts(data);
+        console.log('posts 설정 완료:', data);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error('데이터 가져오기 중 오류:', error);
       });
   }, []);
 
-  // 수취확인 버튼 클릭시 호출되는 함수
-  const handleCheckClick = (postId) => {
-    setSelectedPostId(postId);
+  // 수취확인 버튼 클릭 시 팝업을 열고 선택된 ID 저장
+  const handleCheckClick = (id) => {
+    console.log('handleCheckClick 호출됨 - 팝업 열림 설정, 선택된 ID:', id);
+    setSelectedPostId(id); // 선택된 항목의 ID 저장
+    setIsPopupOpen(true); // 팝업 열림
   };
 
   // CheckCode 팝업을 닫기 위한 함수
   const handleCloseCheckCode = () => {
-    setSelectedPostId(null);
+    console.log('CheckCode 닫기 - 팝업 닫힘 설정');
+    setIsPopupOpen(false);
+    setSelectedPostId(null); // 선택된 ID 초기화
   };
 
   return (
     <div className="personal-get-list">
       <div className="post-list">
         {isLoading ? (
-          <div className="loading-message">로딩중...</div> // 로딩 중 메시지 표시
+          <div className="loading-message">로딩중...</div>
         ) : filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <PersonalGetListCard
               key={post.id}
+              itemId={post.id}
               itemImage={post.itemImage}
               itemType={post.itemType}
               lostTime={post.lostTime}
               lostLocation={post.lostLocation}
-              onCheckClick={() => handleCheckClick(post.id)}
+              onCheckClick={() => handleCheckClick(post.id)} // 클릭 시 선택된 ID 전달
             />
           ))
         ) : (
           <p className="no-posts-message">신청 내역이 없습니다.</p>
         )}
       </div>
-      {selectedPostId && (
-        <CheckCode id={selectedPostId} onClose={handleCloseCheckCode} />
-      )}
+      <CheckCode id={selectedPostId} onClose={handleCloseCheckCode} isOpen={isPopupOpen} />
     </div>
   );
 }
