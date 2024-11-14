@@ -1,0 +1,110 @@
+.CCTVLive_video {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  margin-top: 70px;
+}
+
+.CCTVLive_video_BottomLine {
+  margin-top: 10px;
+  border-bottom: 1px solid #948a85;
+  width: 90%;
+}
+
+.CCTVLive_Bottom_all_layout {
+  display: flex;
+  justify-content: center;
+}
+
+.CCTVLive_Bottom_all_size {
+  width: 90%;
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0px;
+}
+
+.CCTVLive_itemimg_isPosted_layout {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90px;
+}
+
+.CCTVLive_itemImg {
+  border-radius: 5px;
+  width: 90px; /* 사진 크기 유지 */
+  height: 90px; /* 사진 크기 유지 */
+  z-index: 0;
+}
+
+.CCTVLive_isPosted_text_layout {
+  position: absolute;
+  bottom: 0;
+  width: 90px; /* 사진 크기와 동일 */
+  height: 20px;
+  background-color: rgba(244, 245, 246, 0.5); /* #F4F5F6 50% 투명도 */
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.CCTVLive_isPosted_text {
+  font-size: 12px;
+  color: #ff3535; /* 기본값: 게시대기 */
+}
+
+.CCTVLive_isPosted_text.published {
+  color: #30dd3b; /* 회수대기일 때 */
+}
+
+.CCTVLive_itemType_lostTime_layout {
+  display: grid;
+}
+
+.CCTVLive_Bottom_text_layout {
+  display: grid;
+  align-content: stretch;
+}
+
+.CCTVLive_itemType {
+  font-size: 18px;
+  color: #333333;
+  font-weight: 700;
+}
+
+.CCTVLive_lostTime {
+  font-size: 13px;
+  color: #948a85;
+}
+
+.CCTVLive_lostLocation_layout {
+  display: flex;
+  align-items: center;
+}
+
+.CCTVLive_lostLocation_text {
+  font-size: 12px;
+  margin-left: 5px;
+  color: #ff3535;
+  font-weight: 700;
+}
+
+.CCTVLive_isClaimed_btn_layout {
+  display: grid;
+  align-items: center;
+}
+
+.CCTVLive_isClaimed_btn {
+  padding: 6px 12px;
+  background-color: #d04020;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 63px;
+  height: 38px;
+}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // useNavigate import 추가
 import "./LostPostDetailPopUp.css";
 
 const LostPostDetailPopUp = ({
@@ -17,6 +18,8 @@ const LostPostDetailPopUp = ({
   const [minDate, setMinDate] = useState("");
   const [hourOptions, setHourOptions] = useState([]);
   const [minuteOptions, setMinuteOptions] = useState([]);
+
+  const navigate = useNavigate(); // useNavigate hook 추가
 
   // Generate options for hour and minute dropdowns
   const generateOptions = (start, end, step = 1) => {
@@ -129,6 +132,7 @@ const LostPostDetailPopUp = ({
       if (response.status === 200) {
         alert("수취 신청이 성공적으로 제출되었습니다.");
         setIsSubmitted(true);
+        navigate("/mypage"); // 네비게이션 추가
       } else {
         alert("수취 신청에 실패했습니다.");
       }
