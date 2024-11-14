@@ -23,13 +23,17 @@ app.use(cors());
 
 const sessionMiddleware = session({
   key: "session_cookie_name",
-  secret: "dasdasd!@#@!#@skja1#@!$!ASDasd", // 여기에 랜덤한 문자열 사용
+  secret: "랜덤한 문자열",
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
   rolling: true,
   unset: "destroy",
-  cookie: {},
+  cookie: {
+    httpOnly: true,
+    secure: false, // HTTPS 환경에서만 true로 설정
+    maxAge: 1000 * 60 * 60 * 24, // 1일
+  },
 });
 
 app.use(sessionMiddleware);
