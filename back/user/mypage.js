@@ -100,7 +100,7 @@ router.get("/personal-get-list", (req, res) => {
         ? `data:image/png;base64,${Buffer.from(item.image).toString("base64")}`
         : null,
       itemType: item.itemType,
-      lostTime: item.lostTime,
+      lostTime: item.pickupDate,
       lostLocation: item.lostLocation,
     }));
 
