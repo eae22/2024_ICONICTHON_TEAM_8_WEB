@@ -23,7 +23,7 @@ app.use(cors());
 
 const sessionMiddleware = session({
   key: "session_cookie_name",
-  secret: "랜덤한 문자열",
+  secret: "sakdlakdjaslkdjsaldk",
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
@@ -50,13 +50,15 @@ const mypageRoutes = require("./user/mypage");
 const loginRoutes = require("./user/login");
 const logoutRoutes = require("./user/logout");
 const logincheckRoutes = require("./user/check-login");
+const lostlistRoutes = require("./lostpost/lostlist");
 
 // YOLO 라우터 추가
 app.use("/", mypageRoutes);
 app.use("/", loginRoutes);
 app.use("/", logincheckRoutes);
 app.use("/", logoutRoutes);
-app.use("/", yoloRoutes); // YOLO 라우터 추가
+app.use("/", yoloRoutes);
+app.use("/", lostlistRoutes);
 
 //프론트 연결
 app.get("*", (req, res) => {
