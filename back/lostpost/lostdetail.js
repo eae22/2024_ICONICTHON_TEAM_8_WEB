@@ -43,7 +43,7 @@ router.get("/lost-item-detail/:id", (req, res) => {
           itemType: item.name,
           lostTime: item.upload_date,
           lostLocation: item.place,
-          storageLocation: item.storageLocation || "위치 정보 없음",
+          storageLocation: item.StorageLocation || "위치 정보 없음",
           itemImage: base64Image, // Base64 이미지 추가
         };
 

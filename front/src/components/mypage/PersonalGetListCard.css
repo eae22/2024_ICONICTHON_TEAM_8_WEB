@@ -1,0 +1,62 @@
+.personal-get-card {
+  display: flex;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  gap: 10px;
+  padding: 10px;
+}
+
+.post-thumbnail {
+  width: 90px;
+  height: 90px;
+  background-color: #ddd;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.post-thumbnail img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.placeholder {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+}
+
+.post-info h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.post-info p {
+  margin: 4px 0;
+  color: #888;
+}
+
+.post-location {
+  color: red; /* 위치 텍스트 빨간색 */
+}
+
+.check-button {
+  width: 63px;
+  height: 38px;
+  border-radius: 5px;
+  background-color: #d04020;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.check-button:hover {
+  background-color: #b8381c;
+}
