@@ -34,7 +34,7 @@ function NavbarBottom() {
             <Link to="/adminpage">
               <img className="NavbarBottom_user_img" src={adminpage} alt="관리자 페이지" />
             </Link>
-            <Link to="/allboard">
+            <Link to="/">
               <img className="NavbarBottom_user_img" src={allboard} alt="전체게시판" />
             </Link>
           </div>
