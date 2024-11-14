@@ -43,16 +43,20 @@ app.use(express.static(path.join(__dirname, "../front/build")));
 app.use(express.static(path.join(__dirname, "public")));
 
 //라우팅
+const yoloRoutes = require("./cctv/yolo"); // YOLO 라우터 추가
+
+// 기존 라우터들
 const mypageRoutes = require("./user/mypage");
 const loginRoutes = require("./user/login");
 const logoutRoutes = require("./user/logout");
 const logincheckRoutes = require("./user/check-login");
 
-//유저정보
+// YOLO 라우터 추가
 app.use("/", mypageRoutes);
 app.use("/", loginRoutes);
 app.use("/", logincheckRoutes);
 app.use("/", logoutRoutes);
+app.use("/", yoloRoutes); // YOLO 라우터 추가
 
 //프론트 연결
 app.get("*", (req, res) => {

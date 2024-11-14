@@ -1,0 +1,45 @@
+/* src/components/Pagination.css */
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.page-button {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  font-family: "NotoSansKR", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: black;
+  cursor: pointer;
+}
+
+.page-button.active {
+  color: red;
+}
+
+.page-button:hover:not(.active) {
+  color: gray;
+}
+
+.arrow-button {
+  background: none;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  color: black;
+  padding: 5px;
+}
+
+.arrow-button:disabled {
+  color: grey;
+}
+
+.pagination-container span {
+  padding: 0 5px;
+  font-size: 15px;
+}
