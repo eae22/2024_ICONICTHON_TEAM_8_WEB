@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+.Login_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh; /* 화면 전체 높이 차지 */
+  margin: 0 auto; /* 중앙 정렬 */
+  width: 90%;
+}
+
+.Login_AllLaF_logo_layout {
+  display: flex;
+  justify-content: center;
+}
+
+.Login_AllLaF_logo {
+  width: 140px;
+  margin-bottom: 35px;
+}
+
+.Login_loginInput,
+.Login_passwordInput {
+  width: 100%;
+  height: 55px;
+  color: #948a85;
+  border-radius: 5px;
+  border: 1px solid #948a85;
+  font-size: 15px;
+  font-family: 'Noto Sans KR', serif;
+  margin: 10px 0px;
+  padding-left: 20px;
+  background-color: white;
+}
+
+/* 클릭했을 때 (focus 상태) 배경색 변경 */
+.Login_loginInput:focus,
+.Login_passwordInput:focus {
+  background-color: #f4f5f6; /* 포커스 시 배경색 */
+  outline: none; /* 기본 outline 제거 */
+}
+
+.Login_login_btn {
+  height: 55px;
+  width: 100%;
+  background-color: #d04020;
+  color: #f4f5f6;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 40px;
+}
+
+.Login_dongguk_logo {
+  width: 130px;
+  margin-bottom: 25px;
+}

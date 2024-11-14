@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
 .LostPostDetail_all_layout {
   margin-bottom: 100px;
 }
@@ -40,7 +42,7 @@
 
 /* 지도 컨테이너 */
 .LostPostDetail_map-container {
-  margin: 20px 0px;
+  margin-bottom: 34px;
   margin-top: 40px;
   text-align: center;
 }
@@ -71,6 +73,70 @@
 
 .LostPostDetail_time_location {
   font-size: 13px;
-  margin: 15px 0px;
+  margin: 15px 5px;
   color: #4a423d;
+}
+
+.LostPostDetail_update_delete_btn_layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 13px;
+}
+
+.LostPostDetail_update_btn,
+.LostPostDetail_delete_btn {
+  height: 40px;
+  width: 100%;
+  font-family: 'Noto Sans KR', serif;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.LostPostDetail_update_btn {
+  background-color: #d04020;
+  color: #f4f5f6;
+}
+
+.LostPostDetail_delete_btn {
+  background-color: #f5f5f5;
+  color: #4a423d;
+}
+
+.LostPostDetail_save_btn {
+  font-size: 15px;
+  font-weight: 700;
+  background-color: #d04020;
+  color: #f4f5f6;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+  text-align: center;
+}
+
+.LostPostDetail_update_input,
+.LostPostDetail_update_input2 {
+  background-color: #f4f5f6;
+  border: none;
+  font-family: 'Noto Sans KR', serif;
+  border-radius: 5px;
+  padding: 2px 2px;
+}
+
+.LostPostDetail_update_input {
+  color: #333333;
+  font-size: 24px;
+  font-weight: 700;
+  width: 210px;
+}
+
+.LostPostDetail_update_input2 {
+  color: #4a423d;
+  font-size: 13px;
+  font-weight: 500;
+  width: 145px;
 }

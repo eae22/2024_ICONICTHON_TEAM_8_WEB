@@ -20,7 +20,6 @@ const Login = () => {
 
       if (response.data.success) {
         // 로그인 성공 시 sessionStorage에 loggedIn 값 저장
-        alert('로그인 성공!');
         sessionStorage.setItem('loggedIn', 'true');
         console.log('로그인 상태:', sessionStorage.getItem('loggedIn'));
 
@@ -42,27 +41,39 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <div>
-        <img src={Dongguk} alt="동국대학교" />
-        <img src={AllLaF} alt="All-Laf" />
-        <form onSubmit={handleLogin}>
+    <div className="Login_container">
+      <div></div>
+      <form onSubmit={handleLogin}>
+        <div className="Login_AllLaF_logo_layout">
+          <img className="Login_AllLaF_logo" src={AllLaF} alt="All-Laf" />
+        </div>
+        <div>
           <input
+            className="Login_loginInput"
             type="text"
             value={id}
             onChange={(e) => setId(e.target.value)}
             placeholder="ndrims ID(학번)을 입력해주세요."
             required
           />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="비밀번호를 입력해주세요."
-            required
-          />
-          <button type="submit">로그인</button>
-        </form>
+        </div>
+        <input
+          className="Login_passwordInput"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="비밀번호를 입력해주세요."
+          required
+        />
+        <div>
+          <button className="Login_login_btn" type="submit">
+            로그인
+          </button>
+        </div>
+      </form>
+      <div></div>
+      <div className="Login_AllLaF_logo_layout">
+        <img className="Login_dongguk_logo" src={Dongguk} alt="동국대학교" />
       </div>
     </div>
   );
