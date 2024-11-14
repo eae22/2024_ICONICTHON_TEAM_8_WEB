@@ -49,7 +49,7 @@ const logoutRoutes = require("./user/logout");
 const logincheckRoutes = require("./user/check-login");
 
 //유저정보
-app.use("/mypage", mypageRoutes);
+app.use("/", mypageRoutes);
 app.use("/", loginRoutes);
 app.use("/", logincheckRoutes);
 app.use("/", logoutRoutes);
