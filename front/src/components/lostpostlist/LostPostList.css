@@ -1,6 +1,8 @@
 .lost-post-list {
-  border: 2px solid red; /* 빨간색 테두리 */
   padding: 20px;
+  display: flex;
+  flex-direction: column; /* Ensure the footer stays at the bottom */
+  min-height: 100vh; /* Make sure the container takes the full height of the viewport */
 }
 
 .search-bar {
@@ -21,6 +23,16 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex-grow: 1; /* Allows the post list to grow and push the footer down */
+  justify-content: center; /* Centers content vertically when there are no posts */
+  align-items: center; /* Centers content horizontally */
+  min-height: 300px; /* Prevents collapse of the container when empty */
+  text-align: center; /* Centers the "No posts found" message */
+}
+
+.post-list p {
+  font-size: 16px;
+  color: #666; /* Neutral color for the message */
 }
 
 .pagination {
