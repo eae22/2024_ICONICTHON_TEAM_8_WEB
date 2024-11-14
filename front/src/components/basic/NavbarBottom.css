@@ -4,18 +4,39 @@
   left: 0;
   right: 0;
   background-color: #4a423d;
-  padding-top: 3px;
-  padding-bottom: 10px;
   max-height: 80px;
   z-index: 9999;
 }
 
 .NavbarBottom_layout {
   display: flex;
+  width: 100%;
+}
+
+.NavbarBottom_link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  padding-top: 7px;
+  padding-bottom: 18px;
+}
+
+/* 활성화된 링크 배경색 변경 */
+.NavbarBottom_link.active {
+  background-color: #2b2522;
 }
 
 .NavbarBottom_user_img {
-  flex: 1; /* 각 이미지가 flex 컨테이너의 너비를 1/3씩 차지하게 함 */
-  width: 100%; /* 이미지가 컨테이너 너비에 맞게 채워지도록 함 */
-  height: auto; /* 이미지의 비율을 유지하면서 크기 조절 */
+  width: 30px;
+  height: auto;
+  margin-bottom: 4px;
+}
+
+.NavbarBottom_text {
+  color: #d9d9d9;
+  font-size: 12px;
 }

@@ -13,6 +13,17 @@
   align-content: space-between;
 }
 
+.PersonalInfo_image {
+  width: 130px;
+  height: 130px;
+  background-color: #f4f5f6;
+  border-radius: 5px;
+}
+
+.PersonalInfo_real_image1 {
+  border-radius: 5px;
+}
+
 .PersonalInfo_placeholder-image {
   width: 130px;
   height: 130px;

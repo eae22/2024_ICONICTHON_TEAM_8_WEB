@@ -47,7 +47,9 @@ const PersonalInfo = () => {
       <div className="PersonalInfo_content">
         <div className="PersonalInfo_image">
           {userInfo.userImage ? (
-            <img className="PersonalInfo_image" src={userInfo.userImage} alt="프로필" />
+            <div className="PersonalInfo_real_image">
+              <img className="PersonalInfo_real_image1" src={userInfo.userImage} alt="프로필" />
+            </div>
           ) : (
             <div className="PersonalInfo_placeholder-image"></div>
           )}
