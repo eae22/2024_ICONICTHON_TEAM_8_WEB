@@ -26,7 +26,7 @@ router.get("/lost-item-list", (req, res) => {
     const items = results.map((item) => ({
       id: item.no,
       name: item.name,
-      place: item.place,
+      place: item.StorageLocation,
       upload_date: item.upload_date,
       image: item.image
         ? `data:image/png;base64,${Buffer.from(item.image).toString("base64")}`

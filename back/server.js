@@ -51,6 +51,8 @@ const loginRoutes = require("./user/login");
 const logoutRoutes = require("./user/logout");
 const logincheckRoutes = require("./user/check-login");
 const lostlistRoutes = require("./lostpost/lostlist");
+const lostdetailRoutes = require("./lostpost/lostdetail");
+const requestRoutes = require("./lostpost/request");
 
 // YOLO 라우터 추가
 app.use("/", mypageRoutes);
@@ -59,6 +61,8 @@ app.use("/", logincheckRoutes);
 app.use("/", logoutRoutes);
 app.use("/", yoloRoutes);
 app.use("/", lostlistRoutes);
+app.use("/", lostdetailRoutes);
+app.use("/", requestRoutes);
 
 //프론트 연결
 app.get("*", (req, res) => {

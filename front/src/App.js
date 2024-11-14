@@ -31,7 +31,7 @@ function App() {
       <Route path="/categoryChoice" element={<CategoryChoice />} />
       <Route path="/mypage" element={<MyPageTotal />} />
       <Route path="/adminpage" element={<AdminPage />} />
-      <Route path="/cctvlive" element={<CCTVLive />} />
+      <Route path="/cctvlive/:location" element={<CCTVLive />} />
     </Routes>
   );
 }
