@@ -9,7 +9,7 @@
 
 /* 분실물 사진 영역 */
 .LostPostDetail_lost-item-image {
-  background-color: #e0e0e0;
+  background-color: #f4f5f6;
   height: 260px;
   display: flex;
   align-items: center;

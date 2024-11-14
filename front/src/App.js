@@ -27,7 +27,7 @@ function App() {
     <Routes>
       <Route path="/" element={<LostPostList />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/lostpost/detail" element={<LostPostDetail />} />
+      <Route path="/lostpost/detail/:id" element={<LostPostDetail />} />
       <Route path="/categoryChoice" element={<CategoryChoice />} />
       <Route path="/mypage" element={<MyPageTotal />} />
       <Route path="/adminpage" element={<AdminPage />} />
