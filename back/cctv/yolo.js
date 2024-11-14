@@ -73,22 +73,17 @@ const classNameMapping = {
   wallets: "지갑",
 };
 
+// 캡처된 이미지를 저장하고 lostlist에 추가const randomPlaces = ["신공학관", "정보문화관", "원흥관"]; // 랜덤 장소 목록
+
 // 캡처된 이미지를 저장하고 lostlist에 추가
 router.post("/save-image", upload.single("image"), async (req, res) => {
   let connection;
 
   try {
     const file = req.file;
-    const detectedClassName = req.body.detectedClassName; // 탐지된 클래스 이름을 클라이언트에서 전달받음
 
     if (!file) {
       return res.status(400).json({ error: "이미지가 업로드되지 않았습니다." });
-    }
-
-    if (!detectedClassName || !classNameMapping[detectedClassName]) {
-      return res
-        .status(400)
-        .json({ error: "유효하지 않은 탐지 클래스 이름입니다." });
     }
 
     // Sharp로 이미지 크기 조정
@@ -105,7 +100,7 @@ router.post("/save-image", upload.single("image"), async (req, res) => {
     await connection.execute(insertImageQuery, ["임시 이름", resizedImage]);
 
     // YOLO 탐지 API 결과를 기반으로 lostlist에 데이터 추가
-    const koreanClassName = classNameMapping[detectedClassName]; // 한글 클래스 이름 매핑
+    const detectedClassName = "카드"; // YOLO 탐지 클래스 결과로 변경해야 함
     const randomPlace =
       randomPlaces[Math.floor(Math.random() * randomPlaces.length)];
     const currentTime = new Date();
@@ -115,7 +110,7 @@ router.post("/save-image", upload.single("image"), async (req, res) => {
       VALUES (?, ?, ?, ?, ?)
     `;
     await connection.execute(insertLostlistQuery, [
-      koreanClassName,
+      detectedClassName,
       randomPlace,
       randomPlace, // StorageLocation 기본값 설정
       resizedImage,
