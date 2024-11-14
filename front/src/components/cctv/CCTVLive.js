@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useRef, useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import LocationIcon from '../../images/LocationIcon.png';
-import './CCTVLive.css';
+import LocationIcon from "../../images/LocationIcon.png";
+import "./CCTVLive.css";
 
 function CCTVLive() {
   const navigate = useNavigate();
@@ -15,30 +15,30 @@ function CCTVLive() {
   const [storedImages, setStoredImages] = useState([]);
   const [isPosted, setIsPosted] = useState(false); // 게시 여부
   const [isClaimed, setIsClaimed] = useState(false); // 회수 여부
-  const [storageLocation, setStorageLocation] = useState('');
-  const [lostTime, setLostTime] = useState('');
-  const [lostLocation, setLostLocation] = useState('');
-  const [itemType, setItemType] = useState('');
+  const [storageLocation, setStorageLocation] = useState("");
+  const [lostTime, setLostTime] = useState("");
+  const [lostLocation, setLostLocation] = useState("");
+  const [itemType, setItemType] = useState("");
   const [captureTime, setCaptureTime] = useState(null); // 이미지 캡쳐 시간
-  const DETECT_URL = '/yolo/detect';
-  const SAVE_IMAGE_URL = '/save-image';
-  const GET_IMAGES_URL = '/get-images';
-  const POST_TO_BOARD_URL = '/post-to-board'; // 게시판에 포스트할 API
+  const DETECT_URL = "/yolo/detect";
+  const SAVE_IMAGE_URL = "/save-image";
+  const GET_IMAGES_URL = "/get-images";
+  const POST_TO_BOARD_URL = "/post-to-board"; // 게시판에 포스트할 API
 
   // location에 따른 storageLocation, lostLocation 설정
   useEffect(() => {
-    if (location === 'infoculture') {
-      setLostLocation('정보문화관 P 402 인쇄실');
-      setStorageLocation('정보문화관 P 402 인쇄실');
-    } else if (location === 'newengineering-building-3') {
-      setLostLocation('신공학관 3층 인쇄실');
-      setStorageLocation('신공학관 3층 인쇄실');
-    } else if (location === 'newengineering-building-9') {
-      setLostLocation('신공학관 9층 인쇄실');
-      setStorageLocation('신공학관 9층 인쇄실');
-    } else if (location === 'wonheung') {
-      setLostLocation('원흥관 3층 인쇄실');
-      setStorageLocation('원흥관 3층 인쇄실');
+    if (location === "infoculture") {
+      setLostLocation("정보문화관 P 402 인쇄실");
+      setStorageLocation("정보문화관 P 402 인쇄실");
+    } else if (location === "newengineering-building-3") {
+      setLostLocation("신공학관 3층 인쇄실");
+      setStorageLocation("신공학관 3층 인쇄실");
+    } else if (location === "newengineering-building-9") {
+      setLostLocation("신공학관 9층 인쇄실");
+      setStorageLocation("신공학관 9층 인쇄실");
+    } else if (location === "wonheung") {
+      setLostLocation("원흥관 3층 인쇄실");
+      setStorageLocation("원흥관 3층 인쇄실");
     }
   }, [location]);
 
@@ -49,7 +49,7 @@ function CCTVLive() {
       .then((stream) => {
         if (videoRef.current) videoRef.current.srcObject = stream;
       })
-      .catch((err) => console.error('웹캠 초기화 실패:', err));
+      .catch((err) => console.error("웹캠 초기화 실패:", err));
   }, []);
 
   // YOLO API에 프레임 전송 및 감지된 객체 업데이트
@@ -57,7 +57,7 @@ function CCTVLive() {
     if (!videoRef.current || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
 
@@ -67,17 +67,17 @@ function CCTVLive() {
         if (blob) {
           resolve(blob);
         } else {
-          reject('Blob could not be created');
+          reject("Blob could not be created");
         }
-      }, 'image/jpeg');
+      }, "image/jpeg");
     });
 
     const formData = new FormData();
-    formData.append('image', blob, 'frame.jpg');
+    formData.append("image", blob, "frame.jpg");
 
     try {
       const response = await fetch(DETECT_URL, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       });
       if (!response.ok) {
@@ -85,32 +85,46 @@ function CCTVLive() {
       }
       const data = await response.json();
       setDetectedClasses(data.detections || []);
-      setItemType(data.detections[0]?.class || '미탐지');
-      setCaptureTime(new Date().toISOString()); // 이미지 캡쳐 시간 저장
-      setLostTime(new Date().toISOString()); // lostTime을 이미지 캡처 시간으로 설정
-      saveImage(blob); // 이미지 저장
+
+      if (data.detections && data.detections.length > 0) {
+        const detectedItem = data.detections[0];
+        setItemType(detectedItem.class || "미탐지");
+        setCaptureTime(new Date().toISOString()); // 이미지 캡쳐 시간 저장
+        setLostTime(new Date().toISOString()); // lostTime을 이미지 캡처 시간으로 설정
+        saveImage(blob, detectedItem.class); // 이미지 저장
+      }
     } catch (error) {
       console.error(`YOLO API 요청 실패: ${error.message}`);
     }
   };
 
+  // 주기적으로 프레임 전송
+  useEffect(() => {
+    const interval = setInterval(() => {
+      sendFrameToServer();
+    }, 5000); // 5초마다 호출
+    return () => clearInterval(interval);
+  }, []);
+
   // 이미지를 서버로 저장
-  const saveImage = async (imageBlob) => {
+  const saveImage = async (imageBlob, detectedClassName) => {
     const formData = new FormData();
-    formData.append('image', imageBlob, 'frame.jpg');
+    formData.append("image", imageBlob, "frame.jpg");
+    formData.append("name", detectedClassName);
 
     try {
       const response = await fetch(SAVE_IMAGE_URL, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       });
       if (response.status === 200) {
-        console.log('이미지 저장 성공');
+        console.log("이미지 저장 성공");
+        fetchStoredImages(); // 저장된 이미지 목록 갱신
       } else {
-        console.error('이미지 저장 실패');
+        console.error("이미지 저장 실패");
       }
     } catch (error) {
-      console.error('이미지 저장 중 오류 발생:', error);
+      console.error("이미지 저장 중 오류 발생:", error);
     }
   };
 
@@ -119,32 +133,37 @@ function CCTVLive() {
     try {
       const response = await fetch(GET_IMAGES_URL);
       if (!response.ok) {
-        throw new Error('저장된 이미지를 가져오는 데 실패했습니다.');
+        throw new Error("저장된 이미지를 가져오는 데 실패했습니다.");
       }
       const data = await response.json();
       setStoredImages(data.images || []);
     } catch (error) {
-      console.error('이미지 가져오기 실패:', error);
+      console.error("이미지 가져오기 실패:", error);
     }
   };
 
+  // 컴포넌트 마운트 시 저장된 이미지 가져오기
+  useEffect(() => {
+    fetchStoredImages();
+  }, []);
+
   // 게시판에 데이터 전송
-  const postToBoard = async (imageData) => {
+  const postToBoard = async (itemData) => {
     try {
       const response = await fetch(POST_TO_BOARD_URL, {
-        method: 'POST',
-        body: JSON.stringify(imageData),
+        method: "POST",
+        body: JSON.stringify(itemData),
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
       if (response.status === 200) {
-        alert('전체게시판에 게시되었습니다.');
+        alert("전체게시판에 게시되었습니다.");
       } else {
-        console.error('게시 실패');
+        console.error("게시 실패");
       }
     } catch (error) {
-      console.error('게시 오류:', error);
+      console.error("게시 오류:", error);
     }
   };
 
@@ -161,14 +180,14 @@ function CCTVLive() {
     };
 
     // location에 맞는 storageLocation 업데이트
-    if (lostLocation === '정보문화관 P 402 인쇄실') {
-      setStorageLocation('정보문화관 P 402 경비실');
-    } else if (lostLocation === '신공학관 3층 인쇄실') {
-      setStorageLocation('신공학관 3층 경비실');
-    } else if (lostLocation === '신공학관 9층 인쇄실') {
-      setStorageLocation('신공학관 9층 경비실');
-    } else if (lostLocation === '원흥관 3층 인쇄실') {
-      setStorageLocation('원흥관 3층 경비실');
+    if (lostLocation === "정보문화관 P 402 인쇄실") {
+      setStorageLocation("정보문화관 P 402 경비실");
+    } else if (lostLocation === "신공학관 3층 인쇄실") {
+      setStorageLocation("신공학관 3층 경비실");
+    } else if (lostLocation === "신공학관 9층 인쇄실") {
+      setStorageLocation("신공학관 9층 경비실");
+    } else if (lostLocation === "원흥관 3층 인쇄실") {
+      setStorageLocation("원흥관 3층 경비실");
     }
 
     // 10분 이내에 회수 버튼을 눌렀을 때
@@ -181,10 +200,12 @@ function CCTVLive() {
     try {
       await postToBoard(itemData);
       // 회수된 항목은 목록에서 삭제
-      setStoredImages((prevImages) => prevImages.filter((image) => image !== img));
-      console.log('회수 성공, 경비실로 변경되었습니다.');
+      setStoredImages((prevImages) =>
+        prevImages.filter((image) => image !== img)
+      );
+      console.log("회수 성공, 경비실로 변경되었습니다.");
     } catch (error) {
-      console.error('회수 처리 중 오류 발생:', error);
+      console.error("회수 처리 중 오류 발생:", error);
     }
   };
 
@@ -198,15 +219,17 @@ function CCTVLive() {
       isPosted: true,
       isClaimed: true, // 회수됨으로 처리
       // storageLocation을 경비실로 변경
-      storageLocation: storageLocation.replace('인쇄실', '경비실'),
+      storageLocation: storageLocation.replace("인쇄실", "경비실"),
     };
 
     try {
       await postToBoard(updatedItemData); // 업데이트된 데이터 백엔드에 전송
-      setStoredImages((prevImages) => prevImages.filter((image) => image !== img)); // 목록에서 이미지 삭제
-      console.log('업데이트되었습니다.');
+      setStoredImages((prevImages) =>
+        prevImages.filter((image) => image !== img)
+      ); // 목록에서 이미지 삭제
+      console.log("업데이트되었습니다.");
     } catch (error) {
-      console.error('업데이트 오류 발생:', error);
+      console.error("업데이트 오류 발생:", error);
     }
   };
 
@@ -223,26 +246,35 @@ function CCTVLive() {
 
   // 10분이 지나면 자동으로 백엔드에 저장
   useEffect(() => {
-    const timePassed = new Date() - new Date(captureTime); // 캡처 시간과 현재 시간 차이 계산
-    if (timePassed > 600000 && !isClaimed) {
-      const itemData = {
-        itemType,
-        lostTime: captureTime,
-        lostLocation,
-        isPosted: true, // 게시됨
-        isClaimed: false, // 회수되지 않음
-        storageLocation,
-      };
+    if (!captureTime || isClaimed) return;
 
-      postToBoard(itemData); // 자동으로 10분 후 백엔드에 저장
-      console.log('10분이 지나 회수되지 않으면 자동으로 백엔드에 저장됩니다.');
-    }
+    const interval = setInterval(() => {
+      const timePassed = new Date() - new Date(captureTime); // 캡처 시간과 현재 시간 차이 계산
+      if (timePassed > 600000 && !isClaimed) {
+        const itemData = {
+          itemType,
+          lostTime: captureTime,
+          lostLocation,
+          isPosted: true, // 게시됨
+          isClaimed: false, // 회수되지 않음
+          storageLocation,
+        };
+
+        postToBoard(itemData); // 자동으로 10분 후 백엔드에 저장
+        console.log(
+          "10분이 지나 회수되지 않으면 자동으로 백엔드에 저장됩니다."
+        );
+        clearInterval(interval);
+      }
+    }, 60000); // 1분마다 체크
+
+    return () => clearInterval(interval);
   }, [captureTime, isClaimed]);
 
   return (
     <div>
       <div className="CCTVLive_video">
-        <video ref={videoRef} autoPlay muted style={{ width: '90%' }}></video>
+        <video ref={videoRef} autoPlay muted style={{ width: "90%" }}></video>
         <div className="CCTVLive_video_BottomLine"></div>
       </div>
 
@@ -259,23 +291,36 @@ function CCTVLive() {
                   height={90}
                 />
                 <div className="CCTVLive_isPosted_text_layout">
-                  <div className={`CCTVLive_isPosted_text ${isPosted ? 'published' : ''}`}>
-                    {isPosted ? '회수대기' : '게시대기'}
+                  <div
+                    className={`CCTVLive_isPosted_text ${
+                      isPosted ? "published" : ""
+                    }`}
+                  >
+                    {isPosted ? "회수대기" : "게시대기"}
                   </div>
                 </div>
               </div>
               <div className="CCTVLive_Bottom_text_layout">
                 <div className="CCTVLive_itemType_lostTime_layout">
-                  <div className="CCTVLive_itemType">{`${itemType || '분실물'}`}</div>
-                  <div className="CCTVLive_lostTime">{`${lostTime || '분실 시간'}`}</div>
+                  <div className="CCTVLive_itemType">{`${
+                    itemType || "분실물"
+                  }`}</div>
+                  <div className="CCTVLive_lostTime">{`${
+                    lostTime || "분실 시간"
+                  }`}</div>
                 </div>
                 <div className="CCTVLive_lostLocation_layout">
-                  <img src={LocationIcon} alt={'장소'} width={12} />
-                  <div className="CCTVLive_lostLocation_text">{`${lostLocation || '분실 장소'}`}</div>
+                  <img src={LocationIcon} alt={"장소"} width={12} />
+                  <div className="CCTVLive_lostLocation_text">{`${
+                    lostLocation || "분실 장소"
+                  }`}</div>
                 </div>
               </div>
               <div className="CCTVLive_isClaimed_btn_layout">
-                <button className="CCTVLive_isClaimed_btn" onClick={() => handleClaimClick(img)}>
+                <button
+                  className="CCTVLive_isClaimed_btn"
+                  onClick={() => handleClaimClick(img)}
+                >
                   회수
                 </button>
               </div>
