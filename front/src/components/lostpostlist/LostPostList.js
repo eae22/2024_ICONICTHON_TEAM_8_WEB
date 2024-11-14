@@ -84,7 +84,7 @@ function LostPostList() {
             />
           ))
         ) : (
-          <p>No posts found</p>
+          <p>게시물 없음</p>
         )}
       </div>
       <Pagination
