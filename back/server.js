@@ -42,15 +42,19 @@ app.use(sessionMiddleware);
 app.use(express.static(path.join(__dirname, "../front/build")));
 app.use(express.static(path.join(__dirname, "public")));
 
+//라우팅
 const mypageRoutes = require("./user/mypage");
 const loginRoutes = require("./user/login");
+const logoutRoutes = require("./user/logout");
 const logincheckRoutes = require("./user/check-login");
 
 //유저정보
 app.use("/mypage", mypageRoutes);
 app.use("/", loginRoutes);
 app.use("/", logincheckRoutes);
+app.use("/", logoutRoutes);
 
+//프론트 연결
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../front/build", "index.html"));
 });
