@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // useNavigate import 추가
+import { useNavigate } from "react-router-dom";
 import "./LostPostDetailPopUp.css";
 
 const LostPostDetailPopUp = ({
+  itemId, // Accept 'itemId' as a prop
   itemType,
   storageLocation,
   lostTime,
@@ -107,7 +108,6 @@ const LostPostDetailPopUp = ({
       return;
     }
 
-    // 필드 확인 후 서버로 전송
     if (
       !pickupDate ||
       !pickupHour ||
@@ -120,24 +120,27 @@ const LostPostDetailPopUp = ({
     }
 
     try {
-      const response = await axios.post("/pickup-request", {
-        itemType, // 필수 데이터
-        storageLocation, // 필수 데이터
-        lostTime, // 분실 시간
-        lostLocation, // 분실 장소
-        pickupDate, // 수취 날짜
-        pickupTime: `${pickupHour}:${pickupMinute}`, // 수취 시간
-      });
+      const data = {
+        itemId, // Include 'itemId' in the request
+        itemType,
+        storageLocation,
+        lostTime,
+        lostLocation,
+        pickupDate,
+        pickupTime: `${pickupHour}:${pickupMinute}`,
+      };
+
+      const response = await axios.post("/pickup-request", data);
 
       if (response.status === 200) {
         alert("수취 신청이 성공적으로 제출되었습니다.");
         setIsSubmitted(true);
-        navigate("/mypage"); // 네비게이션 추가
+        navigate("/mypage");
       } else {
         alert("수취 신청에 실패했습니다.");
       }
     } catch (error) {
-      console.error("수취 신청 중 오류 발생:", error);
+      console.error("Error during pickup request:", error);
       alert("수취 신청 중 오류가 발생했습니다.");
     }
   };

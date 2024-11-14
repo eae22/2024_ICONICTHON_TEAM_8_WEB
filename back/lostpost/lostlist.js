@@ -14,7 +14,6 @@ const pool = mysql.createPool({
   charset: "utf8mb4", // utf8mb4 설정
   debug: false,
 });
-
 router.get("/lost-item-list", (req, res) => {
   pool.query("SELECT * FROM lostlist", (error, results) => {
     if (error) {
@@ -22,19 +21,17 @@ router.get("/lost-item-list", (req, res) => {
       return res.status(500).json({ error: "Database query failed" });
     }
 
-    // Base64 이미지로 변환
     const items = results.map((item) => ({
-      id: item.no,
+      id: item.no, // Ensure 'id' is 'item.no' from the database
       name: item.name,
       place: item.StorageLocation,
       upload_date: item.upload_date,
       image: item.image
         ? `data:image/png;base64,${Buffer.from(item.image).toString("base64")}`
-        : null, // 이미지를 Base64로 변환
+        : null,
     }));
 
     res.status(200).json(items);
   });
 });
-
 module.exports = router;

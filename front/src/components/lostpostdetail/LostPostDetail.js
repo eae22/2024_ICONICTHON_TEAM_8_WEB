@@ -13,17 +13,11 @@ import BackIcon from "../../images/LostPostDetailBackIcon.png";
 import "./LostPostDetail.css";
 
 const LostPostDetail = () => {
+  const { id } = useParams(); // Get 'id' from URL
+  const [lostItemData, setLostItemData] = useState({});
   const navigate = useNavigate();
   const theme = useTheme(); // 테마 사용
   const { isAdmin } = useContext(AuthContext);
-  const { id } = useParams(); // URL에서 id 파라미터 가져오기
-  const [lostItemData, setLostItemData] = useState({
-    itemImage: "",
-    itemType: "",
-    lostTime: "",
-    lostLocation: "",
-    storageLocation: "",
-  });
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
   const [showPopup, setShowPopup] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
@@ -40,18 +34,14 @@ const LostPostDetail = () => {
   // 데이터 로딩
   useEffect(() => {
     axios
-      .get(`/lost-item-detail/${id}`) // id에 맞는 데이터 요청
+      .get(`/lost-item-detail/${id}`) // Fetch item details using 'id'
       .then((response) => {
         setLostItemData(response.data);
-        setEditedData({
-          itemType: response.data.itemType,
-          storageLocation: response.data.storageLocation,
-        });
-        setIsLoading(false); // 로딩 완료
+        setIsLoading(false);
       })
       .catch((error) => {
-        console.error("분실물 상세 정보를 불러오는 중 오류 발생:", error);
-        setIsLoading(false); // 오류 발생 시 로딩 종료
+        console.error("Error fetching lost item details:", error);
+        setIsLoading(false);
       });
   }, [id]);
 
@@ -255,6 +245,7 @@ const LostPostDetail = () => {
 
         {showPopup && (
           <LostPostDetailPopUp
+            itemId={lostItemData.id} // Pass the correct 'id'
             itemType={lostItemData.itemType}
             storageLocation={lostItemData.storageLocation}
             lostTime={lostItemData.lostTime}

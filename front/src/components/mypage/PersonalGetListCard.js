@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-// import "./PersonalGetListCard.css";
+import axios from "axios";
 
 function PersonalGetListCard({
   itemImage,
   itemType,
   lostTime,
   lostLocation,
+  itemId,
   onCheckClick,
 }) {
   const [isLoading, setIsLoading] = useState(true);
   const [formattedDate, setFormattedDate] = useState("");
+  const [imageSrc, setImageSrc] = useState(null);
 
   // 로딩 완료 후 로딩 상태 업데이트
   useEffect(() => {
@@ -25,15 +27,22 @@ function PersonalGetListCard({
       }월 ${date.getDate()}일 ${date.getHours()}시 ${date.getMinutes()}분`;
       setFormattedDate(formatted);
     }
-  }, [lostTime]);
+
+    // 이미지 처리
+    if (itemImage) {
+      setImageSrc(itemImage);
+    } else {
+      setImageSrc(null); // 이미지가 없다면 null 처리
+    }
+  }, [lostTime, itemImage, itemId]);
 
   return (
     <div className="personal-get-card">
       <div className="post-thumbnail">
         {isLoading ? (
           <div className="placeholder">로딩중...</div>
-        ) : itemImage ? (
-          <img src={itemImage} alt="물품 이미지" />
+        ) : imageSrc ? (
+          <img src={imageSrc} alt="물품 이미지" />
         ) : (
           <div className="placeholder">이미지 없음</div>
         )}

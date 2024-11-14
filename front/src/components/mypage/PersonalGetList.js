@@ -7,8 +7,6 @@ import "./PersonalGetList.css";
 function PersonalGetList() {
   const [posts, setPosts] = useState([]); // API 데이터 업데이트용
   const [filteredPosts, setFilteredPosts] = useState([]); // 검색 결과 필터링용
-  // const [currentPage, setCurrentPage] = useState(1); // Pagination용
-  // const itemsPerPage = 5; // 페이지 항목수 설정
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
   const [selectedPostId, setSelectedPostId] = useState(null); // 수취확인 버튼 클릭 시 저장되는 ID
 
@@ -16,17 +14,18 @@ function PersonalGetList() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false); // 데이터를 로드한 후 1초 후 로딩 상태를 false로 변경
-    }, 1000); // 실제 API 응답 시간에 맞춰 설정
+    }, 1000);
 
     axios
       .get("/personal-get-list")
       .then((response) => {
+        console.log(response.data); // API에서 반환된 데이터를 확인
         const data = response.data.map((item) => ({
           id: item.id,
-          itemImage: item.image, // Base64 이미지
-          itemType: item.name,
-          lostTime: item.upload_date,
-          lostLocation: item.place,
+          itemImage: item.itemImage,
+          itemType: item.itemType,
+          lostTime: item.lostTime,
+          lostLocation: item.lostLocation,
         }));
         setPosts(data);
         setFilteredPosts(data);
@@ -36,12 +35,12 @@ function PersonalGetList() {
       });
   }, []);
 
-  //수취확인 버튼 클릭시 호출되는 함수---------------------
+  // 수취확인 버튼 클릭시 호출되는 함수
   const handleCheckClick = (postId) => {
     setSelectedPostId(postId);
   };
 
-  //------ CheckCode 팝업을 닫기 위한 함수----------------
+  // CheckCode 팝업을 닫기 위한 함수
   const handleCloseCheckCode = () => {
     setSelectedPostId(null);
   };
