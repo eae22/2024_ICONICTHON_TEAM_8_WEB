@@ -1,5 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useContext, useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles'; // MUI에서 테마를 가져옴
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
@@ -7,9 +8,16 @@ import Map from '../map/Map';
 import LostPostDetailPopUp from './LostPostDetailPopUp';
 import DeletePopUp from './DeletePopUp';
 
+import BackIcon from '../../images/LostPostDetailBackIcon.png';
+
+import KakaoTalk_20241114_154616828 from '../../images/KakaoTalk_20241114_154616828.jpg';
+import img11 from '../../images/11.png';
+
 import './LostPostDetail.css';
 
 const LostPostDetail = () => {
+  const navigate = useNavigate();
+  const theme = useTheme(); // 테마 사용
   const { isAdmin } = useContext(AuthContext);
   const { id } = useParams(); // URL에서 id 파라미터 가져오기
   const [lostItemData, setLostItemData] = useState({
@@ -28,6 +36,9 @@ const LostPostDetail = () => {
     itemType: '',
     storageLocation: '',
   });
+
+  const [isDarkImage, setIsDarkImage] = useState(false); // 이미지가 어두운지 밝은지 상태 관리
+  const imageRef = useRef(null);
 
   useEffect(() => {
     axios
@@ -60,7 +71,7 @@ const LostPostDetail = () => {
     }
 
     try {
-      const response = await axios.put('/lost-item-update/${id}', {
+      const response = await axios.put(`/lost-item-update/${id}`, {
         itemType: editedData.itemType,
         storageLocation: editedData.storageLocation,
       });
@@ -94,17 +105,69 @@ const LostPostDetail = () => {
     }
   };
 
+  const handleBackClick = () => {
+    navigate(-1); // 이전 페이지로 이동
+  };
+
+  const checkImageBrightness = () => {
+    const img = imageRef.current;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    const imageData = ctx.getImageData(0, 0, img.width, img.height);
+    let r = 0,
+      g = 0,
+      b = 0;
+
+    for (let i = 0; i < imageData.data.length; i += 4) {
+      r += imageData.data[i]; // Red
+      g += imageData.data[i + 1]; // Green
+      b += imageData.data[i + 2]; // Blue
+    }
+
+    const pixelCount = imageData.data.length / 4;
+    r /= pixelCount;
+    g /= pixelCount;
+    b /= pixelCount;
+
+    const brightness = (r + g + b) / 3;
+    setIsDarkImage(brightness < 128); // 밝기가 128보다 낮으면 어두운 이미지로 판단
+  };
+
   return (
     <div className="LostPostDetail_all_layout">
-      <div>
-        <div className="LostPostDetail_lost-item-image">
-          {lostItemData.itemImage ? (
-            <img src={lostItemData.itemImage} alt="분실물" style={{ width: '260px', height: '260px' }} />
-          ) : (
-            '분실물 사진'
-          )}
-        </div>
+      <div className="LostPostDetail_lost-item-image">
+        {lostItemData.itemImage ? (
+          <img
+            ref={imageRef}
+            src={lostItemData.itemImage}
+            alt="분실물"
+            style={{ width: '100%', height: '260px' }}
+            onLoad={checkImageBrightness} // 이미지 로드 후 밝기 체크
+          />
+        ) : (
+          '분실물 사진'
+        )}
+        {/* 이미지 위에 BackIcon을 올리기 */}
+        <img
+          src={BackIcon}
+          alt="Back"
+          onClick={handleBackClick}
+          style={{
+            position: 'absolute',
+            width: '50px',
+            top: '10px',
+            left: '5px',
+            cursor: 'pointer',
+            filter: isDarkImage ? 'invert(100%)' : 'invert(0%)', // 이미지 밝기에 따라 색상 변경
+          }}
+        />
       </div>
+
       <div className="LostPostDetail_lost-post-detail">
         {isEditing ? (
           <>
@@ -184,7 +247,6 @@ const LostPostDetail = () => {
             onDeleteComplete={() => {
               setShowDeletePopup(false);
               alert('게시글이 삭제되었습니다.');
-              // 필요에 따라 다른 동작 추가 가능, 예: 페이지 리디렉션
             }}
           />
         )}
