@@ -1,32 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import infoBuilding from '../../images/Category11.png';
-import newengineeringBuilding from '../../images/Category22.png';
+import newengineeringBuilding3 from '../../images/Category223.png';
+import newengineeringBuilding9 from '../../images/Category229.png';
 import wonheungBuilding from '../../images/Category33.png';
 import etc from '../../images/Category44.png';
 
-import AdminMap from '../map/AdminMap';
 import './AdminPage.css';
 
 function AdminPage() {
   const navigate = useNavigate();
-  const [selectedLocation, setSelectedLocation] = useState('');
 
   const handleLocationClick = (location) => {
     if (location === 'etc') {
       alert('Coming Soon!');
-    } else {
-      setSelectedLocation((prevLocation) => (prevLocation === location ? '' : location));
-    }
-  };
-
-  const handleNavigate = () => {
-    if (selectedLocation === 'info-building') {
+    } else if (location === 'info-building') {
       navigate('/cctv/infoculture');
-    } else if (selectedLocation === 'newengineering-building') {
-      navigate('/cctv/newengineering');
-    } else if (selectedLocation === 'wonheung-building') {
+    } else if (location === 'newengineering-building-3') {
+      navigate('/cctv/newengineering-3');
+    } else if (location === 'newengineering-building-9') {
+      navigate('/cctv/newengineering-9');
+    } else if (location === 'wonheung-building') {
       navigate('/cctv/wonheung');
     }
   };
@@ -35,32 +30,25 @@ function AdminPage() {
     <div className="AdminPage_all_layout">
       <div className="AdminPage_itemLocation_all">
         <div className="AdminPage_bigname">CCTV 실시간 확인</div>
-        <div className="AdminPage_icon_layout">
-          <div onClick={() => handleLocationClick('info-building')}>
-            <img className="AdminPage_categoryImg" src={infoBuilding} alt="정보문화관" />
-          </div>
-          <div onClick={() => handleLocationClick('newengineering-building')}>
-            <img className="AdminPage_categoryImg" src={newengineeringBuilding} alt="신공학관" />
-          </div>
-          <div onClick={() => handleLocationClick('wonheung-building')}>
-            <img className="AdminPage_categoryImg" src={wonheungBuilding} alt="원흥관" />
+        <div className="AdminPage_icon_etc_layout">
+          <div className="AdminPage_icon_layout">
+            <div onClick={() => handleLocationClick('info-building')}>
+              <img className="AdminPage_categoryImg" src={infoBuilding} alt="정보문화관" />
+            </div>
+            <div onClick={() => handleLocationClick('newengineering-building-3')}>
+              <img className="AdminPage_categoryImg" src={newengineeringBuilding3} alt="신공학관 3층" />
+            </div>
+            <div onClick={() => handleLocationClick('newengineering-building-9')}>
+              <img className="AdminPage_categoryImg" src={newengineeringBuilding9} alt="신공학관 9층" />
+            </div>
+            <div onClick={() => handleLocationClick('wonheung-building')}>
+              <img className="AdminPage_categoryImg" src={wonheungBuilding} alt="원흥관" />
+            </div>
           </div>
           <div onClick={() => handleLocationClick('etc')}>
             <img className="AdminPage_categoryImg" src={etc} alt="기타" />
           </div>
         </div>
-      </div>
-
-      {/* 선택된 장소에 따라 지도와 정보 표시 */}
-      <div className="AdminPage_map_all">
-        <AdminMap selectedLocation={selectedLocation} height="250px" level={3} />
-
-        {/* 선택된 위치가 있을 때만 이동하기 버튼 표시 */}
-        {selectedLocation && (
-          <button className="AdminPage_itemLocation_btn" onClick={handleNavigate}>
-            이동하기
-          </button>
-        )}
       </div>
 
       <div className="AdminPage_pickup_code_all">

@@ -1,0 +1,63 @@
+/* 오버레이 설정 */
+.DeletePopUp_popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* 배경 어두움 효과 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* 팝업 위로 배치 */
+}
+
+/* 팝업 내용 */
+.DeletePopUp_popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* 메시지 스타일 */
+.DeletePopUp_message {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+/* 버튼 그룹 설정 */
+.DeletePopUp_button-group {
+  display: grid;
+  gap: 10px;
+}
+
+/* 삭제 버튼 스타일 */
+.DeletePopUp_delete-button {
+  background-color: #d04020;
+  color: #f4f5f6;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  width: 100%;
+}
+
+/* 취소 버튼 스타일 */
+.DeletePopUp_cancel-button {
+  background-color: #f4f5f6;
+  color: #333333;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  width: 100%;
+}

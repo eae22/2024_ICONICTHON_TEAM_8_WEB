@@ -15,15 +15,14 @@ const pool = mysql.createPool({
   debug: false,
 });
 
-// 사용자 정보 조회 API
-router.get("/information", (req, res) => {
-  // 세션에 사용자 정보가 있는지 확인
-  if (req.session && req.session.user) {
-    const StudentID = req.session.user.id; // 세션에서 학번 가져오기
+const sharp = require("sharp");
 
-    // MySQL 쿼리 실행
+router.get("/information", (req, res) => {
+  if (req.session && req.session.user) {
+    const StudentID = req.session.user.id;
+
     pool.query(
-      "SELECT StudentID, Name, Major, State FROM users WHERE StudentID = ?",
+      "SELECT * FROM users WHERE StudentID = ?",
       [StudentID],
       (error, results) => {
         if (error) {
@@ -33,12 +32,38 @@ router.get("/information", (req, res) => {
 
         if (results.length > 0) {
           const user = results[0];
-          res.status(200).json({
-            id: user.StudentID,
-            name: user.Name,
-            major: user.Major,
-            state: user.State,
-          });
+
+          if (user.userImage) {
+            // Blob 데이터를 sharp으로 처리
+            sharp(user.userImage)
+              .resize(130, 130) // 130x130으로 리사이즈
+              .toBuffer()
+              .then((resizedImage) => {
+                const base64Image = `data:image/png;base64,${Buffer.from(
+                  resizedImage
+                ).toString("base64")}`;
+
+                res.status(200).json({
+                  id: user.StudentID,
+                  name: user.Name,
+                  major: user.Major,
+                  state: user.State,
+                  userImage: base64Image, // 리사이즈된 Base64 이미지 데이터
+                });
+              })
+              .catch((err) => {
+                console.error("Image resizing failed:", err);
+                res.status(500).json({ error: "Image processing failed" });
+              });
+          } else {
+            res.status(200).json({
+              id: user.StudentID,
+              name: user.Name,
+              major: user.Major,
+              state: user.State,
+              userImage: null,
+            });
+          }
         } else {
           res.status(404).json({ error: "User not found" });
         }
@@ -47,6 +72,40 @@ router.get("/information", (req, res) => {
   } else {
     res.status(401).json({ error: "User not authenticated" });
   }
+});
+
+router.get("/image/:StudentID", (req, res) => {
+  const StudentID = req.params.StudentID;
+
+  pool.query(
+    "SELECT userImage FROM users WHERE StudentID = ?",
+    [StudentID],
+    (error, results) => {
+      if (error) {
+        console.error("Database query failed:", error);
+        return res.status(500).send("Database query failed");
+      }
+
+      if (results.length > 0 && results[0].userImage) {
+        const imageBuffer = results[0].userImage;
+
+        // 이미지 크기 조정
+        sharp(imageBuffer)
+          .resize(130, 130) // 130x130 크기로 리사이징
+          .toBuffer()
+          .then((resizedImage) => {
+            res.setHeader("Content-Type", "image/png");
+            res.send(resizedImage);
+          })
+          .catch((err) => {
+            console.error("Image resizing failed:", err);
+            res.status(500).send("Image processing failed");
+          });
+      } else {
+        res.status(404).send("Image not found");
+      }
+    }
+  );
 });
 
 module.exports = router;
