@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-routerouter.post("/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.error("세션 종료 중 오류 발생:", err);
