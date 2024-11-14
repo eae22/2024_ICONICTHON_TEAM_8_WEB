@@ -1,0 +1,31 @@
+.lost-post-card {
+  /* border: 2px solid blue; */
+  display: flex;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  gap: 10px;
+  padding: 10px;
+}
+
+.post-thumbnail {
+  width: 90px;
+  height: 90px;
+  background-color: #ddd;
+  border-radius: 4px;
+}
+
+.post-info h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.post-info p {
+  margin: 4px 0;
+  color: #888;
+}
+
+.post-location {
+  color: red; /* 위치 텍스트 빨간색 */
+}
