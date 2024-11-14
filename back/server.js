@@ -38,18 +38,6 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 
-// 정적 파일 제공
-app.use(express.static(path.join(__dirname, '../front/build')));
-app.use(express.static(path.join(__dirname, 'public')));
-
-// React 앱의 빌드된 정적 파일 제공
-app.use(express.static(path.join(__dirname, '../front/build')));
-
-// favicon.ico 직접 제공
-app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front/public', 'favicon.ico'));
-});
-
 //라우팅
 const yoloRoutes = require('./cctv/yolo'); // YOLO 라우터 추가
 
@@ -71,6 +59,18 @@ app.use('/', yoloRoutes);
 app.use('/', lostlistRoutes);
 app.use('/', lostdetailRoutes);
 app.use('/', requestRoutes);
+
+// 정적 파일 제공
+app.use(express.static(path.join(__dirname, '../front/build')));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// React 앱의 빌드된 정적 파일 제공
+app.use(express.static(path.join(__dirname, '../front/build')));
+
+// favicon.ico 직접 제공
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front/public', 'favicon.ico'));
+});
 
 //프론트 연결
 app.get('*', (req, res) => {
