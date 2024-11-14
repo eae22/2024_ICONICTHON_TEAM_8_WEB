@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
-
 import './Map.css';
-
-const { kakao } = window;
 
 const Map = ({ selectedLocation, height = '175px', level = 3 }) => {
   useEffect(() => {
+    const { kakao } = window;
+    if (!kakao || !kakao.maps) return; // kakao 객체 확인
+
     const container = document.getElementById('map');
     if (!container) return;
 
     const options = {
-      center: new kakao.maps.LatLng(37.558883838702705, 126.99848057788074), // 고정된 초기 위치
+      center: new kakao.maps.LatLng(37.558883838702705, 126.99848057788074),
       level: level,
     };
 
@@ -47,17 +47,18 @@ const Map = ({ selectedLocation, height = '175px', level = 3 }) => {
 
     const selectedCoordinates = locations[selectedLocation];
 
-    // SVG 마커 이미지 설정
-    const markerImageSrc = `data:image/svg+xml;utf-8,
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="35" viewBox="0 0 24 35">
-  <path fill="%23D04020" d="M12 0C6.477 0 2 4.477 2 10c0 7.333 10 23 10 23s10-15.667 10-23C22 4.477 17.523 0 12 0z"/>
-  <circle cx="12" cy="10" r="3" fill="%23fff"/>
-</svg>`;
+    const markerImageSrc = `data:image/svg+xml,${encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="35" viewBox="0 0 24 35">
+        <path fill="#D04020" d="M12 0C6.477 0 2 4.477 2 10c0 7.333 10 23 10 23s10-15.667 10-23C22 4.477 17.523 0 12 0z"/>
+        <circle cx="12" cy="10" r="3" fill="#fff"/>
+      </svg>
+    `)}`;
     const markerImageSize = new kakao.maps.Size(24, 35);
     const markerImageOption = { offset: new kakao.maps.Point(12, 35) };
     const markerImage = new kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImageOption);
 
-    // 마커 생성 함수
+    const markers = []; // 마커 객체들을 저장하는 배열
+
     const createMarker = (coord) => {
       const markerPosition = new kakao.maps.LatLng(coord.lat, coord.lng);
       const marker = new kakao.maps.Marker({
@@ -65,14 +66,12 @@ const Map = ({ selectedLocation, height = '175px', level = 3 }) => {
         image: markerImage,
       });
 
-      // InfoWindow HTML 문자열 생성
       const infoWindow = new kakao.maps.InfoWindow({
         content: `<div class="Map_custom-info-window">${coord.message}</div>`,
       });
 
       let isOpen = false;
 
-      // 마커 클릭 이벤트 추가
       kakao.maps.event.addListener(marker, 'click', () => {
         if (isOpen) {
           infoWindow.close();
@@ -83,17 +82,20 @@ const Map = ({ selectedLocation, height = '175px', level = 3 }) => {
       });
 
       marker.setMap(map);
-
-      // 지도 중심을 마커 위치로 이동
+      markers.push(marker); // 생성된 마커 저장
       map.setCenter(markerPosition);
     };
 
-    // 선택된 위치의 각 좌표에 대해 마커 생성
     if (selectedCoordinates) {
       selectedCoordinates.forEach((coord) => createMarker(coord));
     }
 
     map.relayout();
+
+    // Cleanup 함수로 마커와 지도 정리
+    return () => {
+      markers.forEach((marker) => marker.setMap(null)); // 모든 마커 제거
+    };
   }, [selectedLocation, level]);
 
   return <div id="map" className="Map_map" style={{ width: '100%', height }}></div>;
