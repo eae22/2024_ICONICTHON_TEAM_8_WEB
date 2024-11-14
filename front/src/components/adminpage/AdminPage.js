@@ -16,13 +16,13 @@ function AdminPage() {
     if (location === 'etc') {
       alert('Coming Soon!');
     } else if (location === 'info-building') {
-      navigate('/cctv/infoculture');
+      navigate('/cctvlive/infoculture');
     } else if (location === 'newengineering-building-3') {
-      navigate('/cctv/newengineering-3');
+      navigate('/cctvlive/newengineering-3');
     } else if (location === 'newengineering-building-9') {
-      navigate('/cctv/newengineering-9');
+      navigate('/cctvlive/newengineering-9');
     } else if (location === 'wonheung-building') {
-      navigate('/cctv/wonheung');
+      navigate('/cctvlive/wonheung');
     }
   };
 
