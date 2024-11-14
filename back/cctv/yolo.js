@@ -5,16 +5,13 @@ const axios = require("axios");
 const sharp = require("sharp");
 const mysql = require("mysql2/promise");
 const FormData = require("form-data");
-const db_config = require("../config/db_config.json");
+const db_config = require("../config/db_config.json"); // JSON 파일에서 MySQL 설정 가져오기
 
 // Multer 설정: 이미지 파일 업로드 처리
 const upload = multer();
 
-// YOLOv8 Flask API URL (ngrok URL)
-const YOLO_API_URL = "http://localhost:5000/detect"; // Flask 앱이 로컬에서 실행된다고 가정
-
-// MySQL 연결 설정
-const pool = mysql.createPool(db_config);
+// YOLOv8 Colab API URL (ngrok URL)
+const YOLO_API_URL = "https://d1a0-34-139-116-187.ngrok-free.app/detect"; // Flask 서버의 ngrok URL로 변경
 
 // YOLO 탐지 API
 router.post("/yolo/detect", upload.single("image"), async (req, res) => {
@@ -68,13 +65,22 @@ router.post("/yolo/detect", upload.single("image"), async (req, res) => {
   }
 });
 
+const randomPlaces = ["신공학관", "정보문화관", "원흥관"]; // 랜덤 장소 목록
+
+// YOLO 탐지 클래스 이름 매핑
+const classNameMapping = {
+  card: "카드",
+  wallets: "지갑",
+};
+
+// 캡처된 이미지를 저장하고 lostlist에 추가const randomPlaces = ["신공학관", "정보문화관", "원흥관"]; // 랜덤 장소 목록
+
 // 캡처된 이미지를 저장하고 lostlist에 추가
 router.post("/save-image", upload.single("image"), async (req, res) => {
   let connection;
 
   try {
     const file = req.file;
-    const { name: detectedClassName } = req.body; // Flask 앱에서 전달한 클래스 이름
 
     if (!file) {
       return res.status(400).json({ error: "이미지가 업로드되지 않았습니다." });
@@ -84,19 +90,19 @@ router.post("/save-image", upload.single("image"), async (req, res) => {
     const resizedImage = await sharp(file.buffer).resize(250, 250).toBuffer();
 
     // MySQL에 연결
-    connection = await pool.getConnection();
+    connection = await mysql.createConnection(db_config);
 
     // 이미지 데이터 저장
     const insertImageQuery = `
       INSERT INTO testimage (name, image, created_at) 
       VALUES (?, ?, NOW())
     `;
-    await connection.execute(insertImageQuery, [
-      detectedClassName || "알 수 없음",
-      resizedImage,
-    ]);
+    await connection.execute(insertImageQuery, ["임시 이름", resizedImage]);
 
-    // lostlist에 데이터 추가
+    // YOLO 탐지 API 결과를 기반으로 lostlist에 데이터 추가
+    const detectedClassName = "카드"; // YOLO 탐지 클래스 결과로 변경해야 함
+    const randomPlace =
+      randomPlaces[Math.floor(Math.random() * randomPlaces.length)];
     const currentTime = new Date();
 
     const insertLostlistQuery = `
@@ -104,20 +110,20 @@ router.post("/save-image", upload.single("image"), async (req, res) => {
       VALUES (?, ?, ?, ?, ?)
     `;
     await connection.execute(insertLostlistQuery, [
-      detectedClassName || "알 수 없음",
-      "인쇄실", // 실제 장소 정보로 변경 필요
-      "인쇄실", // 실제 보관 장소로 변경 필요
+      detectedClassName,
+      randomPlace,
+      randomPlace, // StorageLocation 기본값 설정
       resizedImage,
       currentTime,
     ]);
 
-    connection.release();
+    await connection.end();
 
     res.json({ message: "이미지가 저장되고 lostlist에 추가되었습니다." });
   } catch (error) {
     console.error("이미지 저장 실패:", error.message);
 
-    if (connection) connection.release();
+    if (connection) await connection.end();
     res.status(500).json({ error: "이미지 저장 중 오류가 발생했습니다." });
   }
 });
@@ -125,7 +131,7 @@ router.post("/save-image", upload.single("image"), async (req, res) => {
 // 저장된 이미지를 가져오는 API
 router.get("/get-images", async (req, res) => {
   try {
-    const connection = await pool.getConnection();
+    const connection = await mysql.createConnection(db_config);
 
     const [rows] = await connection.execute(
       "SELECT image FROM testimage ORDER BY created_at DESC"
@@ -134,46 +140,12 @@ router.get("/get-images", async (req, res) => {
     // Base64로 변환하여 반환
     const images = rows.map((row) => Buffer.from(row.image).toString("base64"));
 
-    connection.release();
+    await connection.end();
 
     res.json({ images });
   } catch (error) {
     console.error("이미지 가져오기 실패:", error.message);
     res.status(500).json({ error: "이미지 가져오기 실패" });
-  }
-});
-
-// 게시판에 데이터 전송하는 엔드포인트 추가
-router.post("/post-to-board", async (req, res) => {
-  let connection;
-  try {
-    const itemData = req.body;
-
-    // MySQL에 연결
-    connection = await pool.getConnection();
-
-    // lostlist 테이블에 데이터 삽입
-    const insertLostlistQuery = `
-      INSERT INTO lostlist (name, place, StorageLocation, isPosted, isClaimed, upload_date) 
-      VALUES (?, ?, ?, ?, ?, ?)
-    `;
-    await connection.execute(insertLostlistQuery, [
-      itemData.itemType || "알 수 없음",
-      itemData.lostLocation || "알 수 없음",
-      itemData.storageLocation || "알 수 없음",
-      itemData.isPosted ? 1 : 0,
-      itemData.isClaimed ? 1 : 0,
-      itemData.lostTime || new Date(),
-    ]);
-
-    connection.release();
-
-    res.status(200).json({ message: "게시 성공" });
-  } catch (error) {
-    console.error("게시 실패:", error.message);
-
-    if (connection) connection.release();
-    res.status(500).json({ error: "게시 중 오류가 발생했습니다." });
   }
 });
 
