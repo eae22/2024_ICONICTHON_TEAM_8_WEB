@@ -11,63 +11,44 @@ const LostPostDetailPopUp = ({ itemType, storageLocation, lostTime, lostLocation
   const [hourOptions, setHourOptions] = useState([]);
   const [minuteOptions, setMinuteOptions] = useState([]);
 
-  // Hour와 Minute 옵션을 업데이트하는 함수
+  // Generate options for hour and minute dropdowns
+  const generateOptions = (start, end, step = 1) => {
+    const options = [];
+    for (let value = start; value <= end; value += step) {
+      options.push(
+        <option key={value} value={String(value).padStart(2, '0')}>
+          {String(value).padStart(2, '0')}
+        </option>
+      );
+    }
+    return options;
+  };
+
   const updateHourAndMinuteOptions = useCallback(
     (selectedDate, currentHour, currentMinute) => {
       const isToday = selectedDate === minDate;
-
-      const startHour = isToday ? (currentMinute >= 50 ? Math.max(currentHour + 1, 9) : Math.max(currentHour, 9)) : 9;
-      const endHour = 20;
-      setHourOptions(generateHourOptions(startHour, endHour));
+      const startHour = isToday ? Math.max(currentHour + (currentMinute >= 50 ? 1 : 0), 9) : 9;
+      setHourOptions(generateOptions(startHour, 20));
 
       if (isToday && parseInt(pickupHour, 10) === currentHour && currentMinute < 50) {
-        setMinuteOptions(generateMinuteOptions(currentMinute));
+        setMinuteOptions(generateOptions(Math.ceil(currentMinute / 10) * 10, 50, 10));
       } else {
-        setMinuteOptions(generateMinuteOptions());
+        setMinuteOptions(generateOptions(0, 50, 10));
       }
     },
     [minDate, pickupHour]
   );
 
-  const generateHourOptions = (startHour = 9, endHour = 20) => {
-    const options = [];
-    for (let hour = startHour; hour <= endHour; hour++) {
-      options.push(
-        <option key={hour} value={String(hour).padStart(2, '0')}>
-          {String(hour).padStart(2, '0')}
-        </option>
-      );
-    }
-    return options;
-  };
-
-  const generateMinuteOptions = (startMinute = 0) => {
-    const options = [];
-    const roundedStartMinute = Math.ceil(startMinute / 10) * 10;
-    for (let minute = roundedStartMinute; minute < 60; minute += 10) {
-      options.push(
-        <option key={minute} value={String(minute).padStart(2, '0')}>
-          {String(minute).padStart(2, '0')}
-        </option>
-      );
-    }
-    return options;
-  };
-
+  // Initialize date options on mount
   useEffect(() => {
     const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const today = `${year}-${month}-${day}`;
+    const today = now.toISOString().split('T')[0];
     setMinDate(today);
 
-    updateHourAndMinuteOptions(today, currentHour, currentMinute);
+    updateHourAndMinuteOptions(today, now.getHours(), now.getMinutes());
   }, [updateHourAndMinuteOptions]);
 
+  // Handle date changes
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
     setPickupDate(selectedDate);
@@ -75,21 +56,19 @@ const LostPostDetailPopUp = ({ itemType, storageLocation, lostTime, lostLocation
     setPickupMinute('');
 
     const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    updateHourAndMinuteOptions(selectedDate, currentHour, currentMinute);
+    updateHourAndMinuteOptions(selectedDate, now.getHours(), now.getMinutes());
   };
 
+  // Handle time changes
   const handleTimeChange = (type, value) => {
     if (type === 'hour') {
       setPickupHour(value);
       const now = new Date();
 
       if (pickupDate === minDate && parseInt(value, 10) === now.getHours() && now.getMinutes() < 50) {
-        setMinuteOptions(generateMinuteOptions(now.getMinutes()));
+        setMinuteOptions(generateOptions(Math.ceil(now.getMinutes() / 10) * 10, 50, 10));
       } else {
-        setMinuteOptions(generateMinuteOptions());
+        setMinuteOptions(generateOptions(0, 50, 10));
       }
       setPickupMinute('');
     } else {
@@ -151,9 +130,7 @@ const LostPostDetailPopUp = ({ itemType, storageLocation, lostTime, lostLocation
             onChange={(e) => handleTimeChange('hour', e.target.value)}
             disabled={!pickupDate}
           >
-            <option className="LostPostDetailPopUp_time_select" value="">
-              시 선택
-            </option>
+            <option value="">시 선택</option>
             {hourOptions}
           </select>
           :
@@ -163,9 +140,7 @@ const LostPostDetailPopUp = ({ itemType, storageLocation, lostTime, lostLocation
             onChange={(e) => handleTimeChange('minute', e.target.value)}
             disabled={!pickupHour}
           >
-            <option className="LostPostDetailPopUp_time_select" value="">
-              분 선택
-            </option>
+            <option value="">분 선택</option>
             {minuteOptions}
           </select>
         </div>
