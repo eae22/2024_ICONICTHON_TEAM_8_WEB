@@ -65,7 +65,9 @@ router.post("/yolo/detect", upload.single("image"), async (req, res) => {
   }
 });
 
-// 캡처된 이미지를 저장하는 API
+const randomPlaces = ["신공학관", "정보문화관", "원흥관"]; // 랜덤 장소 목록
+
+// 캡처된 이미지를 저장하고 lostlist에 추가
 router.post("/save-image", upload.single("image"), async (req, res) => {
   let connection;
 
@@ -83,15 +85,33 @@ router.post("/save-image", upload.single("image"), async (req, res) => {
     connection = await mysql.createConnection(db_config);
 
     // 이미지 데이터 저장
-    const query = `
-      INSERT INTO testimage (filename, image, created_at) 
+    const insertImageQuery = `
+      INSERT INTO testimage (name, image, created_at) 
       VALUES (?, ?, NOW())
     `;
-    await connection.execute(query, [file.originalname, resizedImage]);
+    await connection.execute(insertImageQuery, ["임시 이름", resizedImage]);
+
+    // YOLO 탐지 API 결과를 기반으로 lostlist에 데이터 추가
+    const detectedClassName = "카드"; // YOLO 탐지 클래스 결과로 변경해야 함
+    const randomPlace =
+      randomPlaces[Math.floor(Math.random() * randomPlaces.length)];
+    const currentTime = new Date();
+
+    const insertLostlistQuery = `
+      INSERT INTO lostlist (name, place, StorageLocation, image, upload_date) 
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    await connection.execute(insertLostlistQuery, [
+      detectedClassName,
+      randomPlace,
+      randomPlace, // StorageLocation 기본값 설정
+      resizedImage,
+      currentTime,
+    ]);
 
     await connection.end();
 
-    res.json({ message: "이미지가 저장되었습니다." });
+    res.json({ message: "이미지가 저장되고 lostlist에 추가되었습니다." });
   } catch (error) {
     console.error("이미지 저장 실패:", error.message);
 
