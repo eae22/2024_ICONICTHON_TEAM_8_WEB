@@ -12,6 +12,4 @@ router.get("/check-login", (req, res) => {
   }
 });
 
-router.use("/process", router);
-
 module.exports = router;

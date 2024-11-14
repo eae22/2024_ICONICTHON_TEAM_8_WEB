@@ -31,7 +31,7 @@ const sessionMiddleware = session({
   unset: "destroy",
   cookie: {
     httpOnly: true,
-    secure: false, // HTTPS 환경에서만 true로 설정
+    secure: process.env.NODE_ENV === "production", // 배포 환경에서는 true
     maxAge: 1000 * 60 * 60 * 24, // 1일
   },
 });
@@ -44,10 +44,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const mypageRoutes = require("./user/mypage");
 const loginRoutes = require("./user/login");
+const logincheckRoutes = require("./user/check-login");
 
 //유저정보
 app.use("/mypage", mypageRoutes);
 app.use("/", loginRoutes);
+app.use("/", logincheckRoutes);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../front/build", "index.html"));
