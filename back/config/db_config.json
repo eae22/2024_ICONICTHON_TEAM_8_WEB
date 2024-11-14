@@ -1,7 +1,6 @@
 {
-  "host": "35.232.143.49",
+  "host": "34.173.146.174",
   "user": "root",
-  "password": "hanul",
-  "database": "SeoulHackathon",
+  "database": "Find",
   "port": "3306 "
 }

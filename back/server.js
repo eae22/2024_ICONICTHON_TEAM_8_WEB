@@ -39,12 +39,14 @@ app.use(express.static(path.join(__dirname, "../front/build")));
 app.use(express.static(path.join(__dirname, "public")));
 
 const mypageRoutes = require("./user/mypage");
+const loginRoutes = require("./user/login");
 
 //유저정보
 app.use("/mypage", mypageRoutes);
+app.use("/", loginRoutes);
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+  res.sendFile(path.join(__dirname, "../front/build", "index.html"));
 });
 
 const PORT = process.env.PORT || 3000;
