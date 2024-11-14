@@ -1,0 +1,9 @@
+.application-details-title {
+  border-top: 1px solid #948a85;
+  border-bottom: 1px solid #948a85;
+  padding: 15px 0;
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 1;
+}

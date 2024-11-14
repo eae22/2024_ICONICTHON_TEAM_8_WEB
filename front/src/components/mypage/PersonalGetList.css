@@ -1,0 +1,11 @@
+.no-posts-message {
+  text-align: center;
+  margin-top: 40px;
+  z-index: 99;
+}
+
+.loading-message {
+  text-align: center;
+  margin-top: 40px;
+  z-index: 99;
+}
