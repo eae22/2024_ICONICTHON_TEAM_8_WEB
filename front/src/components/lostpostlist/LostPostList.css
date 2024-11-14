@@ -32,3 +32,10 @@
   margin: 0 5px;
   cursor: pointer;
 }
+
+.no-posts-message {
+  margin-top: 20px;
+  text-align: center !important;
+  margin-top: 40px !important;
+  z-index: 400;
+}

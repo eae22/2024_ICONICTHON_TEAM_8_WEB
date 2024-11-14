@@ -1,4 +1,8 @@
 /* src/components/Pagination.css */
+.arrowbutton {
+  border: none !important;
+  margin: 10px !important;
+}
 
 .pagination-container {
   display: flex;
