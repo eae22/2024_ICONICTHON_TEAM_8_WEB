@@ -98,6 +98,15 @@ const AfterCategoryChoice = () => {
     case "umbrella":
       headerTitle = "우산 분실물";
       break;
+    case "infoculture":
+      headerTitle = "정보문화관 분실물";
+      break;
+    case "newengineering":
+      headerTitle = "신공학관 분실물";
+      break;
+    case "wonheung":
+      headerTitle = "원흥관 분실물";
+      break;
     default:
       headerTitle = `${category} 분실물`;
   }
