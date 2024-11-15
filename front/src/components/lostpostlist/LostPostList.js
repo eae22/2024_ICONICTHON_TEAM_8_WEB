@@ -1,12 +1,12 @@
 // LostPostList.js
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import LostPostListCard from "./LostPostListCard";
-import "./LostPostList.css";
-import Header from "../basic/Header";
-import SearchBar from "./SearchBar";
-import Pagination from "./Pagination";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import LostPostListCard from './LostPostListCard';
+import './LostPostList.css';
+import Header from '../basic/Header';
+import SearchBar from './SearchBar';
+import Pagination from './Pagination';
 
 function LostPostList() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ function LostPostList() {
 
   useEffect(() => {
     axios
-      .get("/lost-item-list")
+      .get('/lost-item-list')
       .then((response) => {
         const data = response.data.map((item) => ({
           id: item.id, // Use 'id' from the response
@@ -32,15 +32,20 @@ function LostPostList() {
         setIsLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
         setIsLoading(false);
       });
   }, []);
 
   const handleSearch = (searchText) => {
+    // 검색어가 없으면 전체 데이터를 표시
+    if (!searchText) {
+      setFilteredPosts(posts); // 전체 데이터를 표시하도록 설정
+      return;
+    }
     if (searchText) {
-      const results = posts.filter((post) =>
-        post.itemType.includes(searchText)
+      const results = posts.filter(
+        (post) => post.itemType.includes(searchText) || post.lostLocation.includes(searchText)
       );
       setFilteredPosts(results);
     } else {
