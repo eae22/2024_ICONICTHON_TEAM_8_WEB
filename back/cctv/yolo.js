@@ -2,60 +2,40 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const axios = require("axios");
-const mysql = require("mysql2/promise");
 const FormData = require("form-data");
-const dbConfig = require("../config/db_config.json"); // JSON 파일에서 MySQL 설정 가져오기
+const fs = require("fs");
+const path = require("path");
 
-// Multer 설정: 이미지 파일 업로드 처리
-const upload = multer();
+// Multer setup: File upload handling
+const upload = multer({ dest: "uploads/" });
 
-// YOLOv8 Colab API URL (ngrok URL)
-const YOLO_API_URL = "https://3fcd-34-90-255-102.ngrok-free.app/upload-video"; // Flask 서버의 ngrok URL로 변경
+// Flask YOLO API URL (replace `<ngrok-url>` with actual Flask public URL from ngrok)
+const YOLO_API_URL = "https://e51b-34-90-255-102.ngrok-free.app/upload-video"; // Replace with your ngrok URL
 
-// YOLO 탐지 API
-router.post("/upload-video", upload.single("video"), async (req, res) => {
-  const videoPath = req.file.path;
-
+// YOLO detection API
+router.post("/yolo/detect", upload.single("image"), async (req, res) => {
   try {
-    // YOLO Flask API 호출
-    const formData = new FormData();
-    formData.append("video", fs.createReadStream(videoPath));
+    const filePath = req.file.path;
 
-    const yoloResponse = await axios.post(YOLO_API_URL, formData, {
+    // Send image to Flask YOLO server
+    const formData = new FormData();
+    formData.append("image", fs.createReadStream(filePath));
+
+    const response = await axios.post(YOLO_API_URL, formData, {
       headers: formData.getHeaders(),
+      responseType: "arraybuffer", // Expect binary BLOB data
     });
 
-    const detections = yoloResponse.data.detections;
+    // Cleanup uploaded file
+    fs.unlinkSync(filePath);
 
-    // 탐지 결과를 데이터베이스에 저장
-    const dbConnection = await mysql.createConnection(dbConfig);
-    const insertQuery = `
-      INSERT INTO lostlist (name, place, StorageLocation, image, upload_date) 
-      VALUES (?, ?, ?, ?, NOW())
-    `;
-
-    for (const detection of detections) {
-      const { name, image } = detection;
-
-      // Translate class names to Korean
-      const translatedName =
-        name === "card" ? "카드" : name === "wallets" ? "지갑" : name;
-
-      await dbConnection.execute(insertQuery, [
-        translatedName,
-        "신공학관", // 장소 고정
-        "미정", // 보관 장소 미정으로 설정
-        Buffer.from(image, "base64"),
-      ]);
-    }
-
-    await dbConnection.end();
-    res.json({ status: "success", captured_count: detections.length });
+    // Return binary response to client
+    res.set("Content-Type", "application/octet-stream");
+    res.send(response.data);
   } catch (error) {
-    console.error("Error processing video:", error.message);
-    res.status(500).json({ error: "Failed to process video" });
-  } finally {
-    fs.unlinkSync(videoPath);
+    console.error("Error in /yolo/detect:", error.message);
+    res.status(500).json({ error: "Failed to process image" });
   }
 });
+
 module.exports = router;
