@@ -13,12 +13,23 @@ function SearchBar({ onSearch }) {
     inputRef.current.value = ''; // 검색 후 입력창 초기화
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="search-bar">
-      <input type="text" ref={inputRef} className="search-input" />
       <button onClick={handleSearch} className="search-btn">
         <img src={searchIcon} alt="Search Icon" className="search-icon" />
       </button>
+      <input
+        type="text"
+        ref={inputRef}
+        className="search-input"
+        onKeyPress={handleKeyPress} // Enter 키 감지
+      />
     </div>
   );
 }
