@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import LocationIcon from "../../images/LocationIcon.png";
-import "./CCTVLive.css";
+import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import LocationIcon from '../../images/LocationIcon.png';
+import './CCTVLive.css';
 
 function CCTVLive() {
   const navigate = useNavigate();
@@ -12,27 +12,27 @@ function CCTVLive() {
   // 상태 변수들
   const [detectedClasses, setDetectedClasses] = useState([]);
   const [storedImages, setStoredImages] = useState([]);
-  const [lostLocation, setLostLocation] = useState("");
-  const [storageLocation, setStorageLocation] = useState("");
+  const [lostLocation, setLostLocation] = useState('');
+  const [storageLocation, setStorageLocation] = useState('');
   const [captureTime, setCaptureTime] = useState(null);
-  const DETECT_URL = "/yolo/detect";
-  const SAVE_IMAGE_URL = "/save-image";
-  const GET_IMAGES_URL = "/get-images";
+  const DETECT_URL = '/yolo/detect';
+  const SAVE_IMAGE_URL = '/save-image';
+  const GET_IMAGES_URL = '/get-images';
 
   // location에 따른 storageLocation 및 lostLocation 설정
   useEffect(() => {
-    if (location === "infoculture") {
-      setLostLocation("정보문화관 P 402 인쇄실");
-      setStorageLocation("정보문화관 P 402 경비실");
-    } else if (location === "newengineering-building-3") {
-      setLostLocation("신공학관 3층 인쇄실");
-      setStorageLocation("신공학관 3층 경비실");
-    } else if (location === "newengineering-building-9") {
-      setLostLocation("신공학관 9층 인쇄실");
-      setStorageLocation("신공학관 9층 경비실");
-    } else if (location === "wonheung") {
-      setLostLocation("원흥관 3층 인쇄실");
-      setStorageLocation("원흥관 3층 경비실");
+    if (location === 'infoculture') {
+      setLostLocation('정보문화관 P 402 인쇄실');
+      setStorageLocation('정보문화관 P 402 경비실');
+    } else if (location === 'newengineering-building-3') {
+      setLostLocation('신공학관 3층 인쇄실');
+      setStorageLocation('신공학관 3층 경비실');
+    } else if (location === 'newengineering-building-9') {
+      setLostLocation('신공학관 9층 인쇄실');
+      setStorageLocation('신공학관 9층 경비실');
+    } else if (location === 'wonheung') {
+      setLostLocation('원흥관 3층 인쇄실');
+      setStorageLocation('원흥관 3층 경비실');
     }
   }, [location]);
 
@@ -43,7 +43,7 @@ function CCTVLive() {
       .then((stream) => {
         if (videoRef.current) videoRef.current.srcObject = stream;
       })
-      .catch((err) => console.error("웹캠 초기화 실패:", err));
+      .catch((err) => console.error('웹캠 초기화 실패:', err));
   }, []);
 
   // YOLO API에 프레임 전송
@@ -51,7 +51,7 @@ function CCTVLive() {
     if (!videoRef.current || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
 
@@ -59,16 +59,16 @@ function CCTVLive() {
     const blob = await new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
         if (blob) resolve(blob);
-        else reject("Blob 생성 실패");
-      }, "image/jpeg");
+        else reject('Blob 생성 실패');
+      }, 'image/jpeg');
     });
 
     const formData = new FormData();
-    formData.append("image", blob, "frame.jpg");
+    formData.append('image', blob, 'frame.jpg');
 
     try {
       const response = await fetch(DETECT_URL, {
-        method: "POST",
+        method: 'POST',
         body: formData,
       });
       const data = await response.json();
@@ -76,24 +76,24 @@ function CCTVLive() {
       setCaptureTime(new Date().toISOString());
       saveImage(blob);
     } catch (error) {
-      console.error("YOLO API 요청 실패:", error);
+      console.error('YOLO API 요청 실패:', error);
     }
   };
 
   // 이미지 저장
   const saveImage = async (imageBlob) => {
     const formData = new FormData();
-    formData.append("image", imageBlob, "frame.jpg");
+    formData.append('image', imageBlob, 'frame.jpg');
 
     try {
       const response = await fetch(SAVE_IMAGE_URL, {
-        method: "POST",
+        method: 'POST',
         body: formData,
       });
-      if (response.ok) console.log("이미지 저장 성공");
-      else console.error("이미지 저장 실패");
+      if (response.ok) console.log('이미지 저장 성공');
+      else console.error('이미지 저장 실패');
     } catch (error) {
-      console.error("이미지 저장 중 오류 발생:", error);
+      console.error('이미지 저장 중 오류 발생:', error);
     }
   };
 
@@ -104,7 +104,7 @@ function CCTVLive() {
       const data = await response.json();
       setStoredImages(data.images || []);
     } catch (error) {
-      console.error("이미지 가져오기 실패:", error);
+      console.error('이미지 가져오기 실패:', error);
     }
   };
 
@@ -117,14 +117,27 @@ function CCTVLive() {
     return () => clearInterval(interval);
   }, []);
 
+  // 영상 업로드 핸들러
+  const handleVideoUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const videoURL = URL.createObjectURL(file);
+      videoRef.current.src = videoURL;
+    }
+  };
+
   return (
     <div>
       <div className="CCTVLive_video">
-        <video ref={videoRef} autoPlay muted style={{ width: "90%" }}></video>
-        <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
+        <video ref={videoRef} autoPlay muted style={{ width: '90%' }}></video>
+        <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
         <div className="CCTVLive_video_BottomLine"></div>
       </div>
-
+      {/* 업로드 영역 */}
+      <div className="video-upload-section">
+        <label htmlFor="videoUpload">여기에 영상 업로드:</label>
+        <input type="file" id="videoUpload" accept="video/*" onChange={handleVideoUpload} />
+      </div>
       <div>
         {storedImages.map((img, idx) => (
           <div key={idx} className="CCTVLive_Bottom_all_layout">
@@ -141,15 +154,11 @@ function CCTVLive() {
               <div className="CCTVLive_Bottom_text_layout">
                 <div className="CCTVLive_itemType_lostTime_layout">
                   <div className="CCTVLive_itemType">분실물</div>
-                  <div className="CCTVLive_lostTime">
-                    {captureTime || "분실 시간"}
-                  </div>
+                  <div className="CCTVLive_lostTime">{captureTime || '분실 시간'}</div>
                 </div>
                 <div className="CCTVLive_lostLocation_layout">
-                  <img src={LocationIcon} alt={"장소"} width={12} />
-                  <div className="CCTVLive_lostLocation_text">
-                    {lostLocation || "분실 장소"}
-                  </div>
+                  <img src={LocationIcon} alt={'장소'} width={12} />
+                  <div className="CCTVLive_lostLocation_text">{lostLocation || '분실 장소'}</div>
                 </div>
               </div>
             </div>
