@@ -10,10 +10,10 @@ const dbConfig = require("../config/db_config.json"); // JSON 파일에서 MySQL
 const upload = multer();
 
 // YOLOv8 Colab API URL (ngrok URL)
-const YOLO_API_URL = "https://d1a0-34-139-116-187.ngrok-free.app/detect"; // Flask 서버의 ngrok URL로 변경
+const YOLO_API_URL = "https://3fcd-34-90-255-102.ngrok-free.app/upload-video"; // Flask 서버의 ngrok URL로 변경
 
 // YOLO 탐지 API
-app.post("/upload-video", upload.single("video"), async (req, res) => {
+router.post("/upload-video", upload.single("video"), async (req, res) => {
   const videoPath = req.file.path;
 
   try {
@@ -37,29 +37,25 @@ app.post("/upload-video", upload.single("video"), async (req, res) => {
     for (const detection of detections) {
       const { name, image } = detection;
 
-      // 탐지된 객체의 한글 이름 설정
+      // Translate class names to Korean
       const translatedName =
         name === "card" ? "카드" : name === "wallets" ? "지갑" : name;
 
-      // 데이터베이스에 저장
       await dbConnection.execute(insertQuery, [
         translatedName,
         "신공학관", // 장소 고정
         "미정", // 보관 장소 미정으로 설정
-        Buffer.from(image, "base64"), // Flask에서 Base64 이미지 전달받음
+        Buffer.from(image, "base64"),
       ]);
     }
 
     await dbConnection.end();
-
     res.json({ status: "success", captured_count: detections.length });
   } catch (error) {
     console.error("Error processing video:", error.message);
     res.status(500).json({ error: "Failed to process video" });
   } finally {
-    // 업로드된 비디오 삭제
     fs.unlinkSync(videoPath);
   }
 });
-
 module.exports = router;
