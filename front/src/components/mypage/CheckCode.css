@@ -33,11 +33,18 @@
 /* 입력 필드 스타일 */
 .CheckCode_input {
   width: 100%;
-  padding: 8px;
+  padding: 14px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #948a85;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #948a85;
+}
+
+.CheckCode_input:focus {
+  background-color: #f4f5f6; /* 포커스 시 배경색 */
+  outline: none;
 }
 
 /* 확인 버튼 스타일 */
@@ -52,17 +59,13 @@
   font-weight: 700;
   width: 100%;
   margin-bottom: 10px;
+  height: 40px;
 }
 
-/* 취소 버튼 스타일 */
-.CheckCode_cancel-button {
-  background-color: #f4f5f6;
+.CheckCode_popup_name {
+  font-size: 20px;
   color: #333333;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
   font-weight: 700;
-  width: 100%;
+  text-align: left;
+  margin-bottom: 20px;
 }

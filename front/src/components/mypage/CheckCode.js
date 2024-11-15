@@ -33,6 +33,7 @@ const CheckCode = ({ id, onClose, isOpen }) => {
   return (
     <div className="CheckCode_popup-overlay" onClick={onClose}>
       <div className="CheckCode_popup-content" onClick={(e) => e.stopPropagation()}>
+        <div className="CheckCode_popup_name">수취확인</div>
         <input
           type="text"
           value={code}
@@ -42,9 +43,6 @@ const CheckCode = ({ id, onClose, isOpen }) => {
         />
         <button onClick={handleConfirm} className="CheckCode_confirm-button">
           수취 확인
-        </button>
-        <button onClick={onClose} className="CheckCode_cancel-button">
-          취소
         </button>
       </div>
     </div>

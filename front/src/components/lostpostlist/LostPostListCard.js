@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from "react";
-import "./LostPostListCard.css";
+import React, { useState, useEffect } from 'react';
 
-function LostPostListCard({
-  itemImage,
-  itemType,
-  lostTime,
-  lostLocation,
-  onClick,
-}) {
+import LocationIcon from '../../images/LocationIcon.png';
+
+import './LostPostListCard.css';
+
+function LostPostListCard({ itemImage, itemType, lostTime, lostLocation, onClick }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [formattedDate, setFormattedDate] = useState("");
+  const [formattedDate, setFormattedDate] = useState('');
 
   // 로딩 완료 후 로딩 상태 업데이트
   useEffect(() => {
@@ -29,20 +26,27 @@ function LostPostListCard({
   }, [lostTime]);
 
   return (
-    <div className="lost-post-card" onClick={onClick}>
-      <div className="post-thumbnail">
-        {isLoading ? (
-          <div className="placeholder">로딩중...</div>
-        ) : itemImage ? (
-          <img src={itemImage} alt="분실물 이미지" />
-        ) : (
-          <div className="placeholder">이미지 없음</div>
-        )}
-      </div>
-      <div className="post-info">
-        <h3>{itemType}</h3>
-        <p>{formattedDate}</p>
-        <p className="post-location">{lostLocation}</p>
+    <div className="LostPostListCard_all_layout">
+      <div className="LostPostListCard_all_size" onClick={onClick}>
+        <div>
+          {isLoading ? (
+            <div lassName="LostPostListCard_placeholder">로딩중...</div>
+          ) : itemImage ? (
+            <img className="LostPostListCard_itemImg" src={itemImage} alt="분실물 이미지" />
+          ) : (
+            <div className="LostPostListCard_placeholder">이미지 없음</div>
+          )}
+        </div>
+        <div className="LostPostListCard_text_layout">
+          <div className="LostPostListCard_lostTime_layout">
+            <div className="PersonalGetListCard_itemType">{itemType || '카드'}</div>
+            <div className="PersonalGetListCard_pickupDate_pickupTime">{formattedDate || '2024.11.11 오후 8시'}</div>
+          </div>
+          <div className="LostPostListCard_lostLocation_layout">
+            <img src={LocationIcon} alt={'장소'} width={12} />
+            <div className="LostPostListCard_storageLocation">{lostLocation || '정보문화관 P 402 인쇄실'}</div>
+          </div>
+        </div>
       </div>
     </div>
   );

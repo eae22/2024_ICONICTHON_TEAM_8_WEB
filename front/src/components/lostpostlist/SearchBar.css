@@ -23,6 +23,8 @@
   width: 24px; /* 아이콘 크기 */
   height: 24px;
   margin: 10px; /* 아이콘과 입력창 간격 */
+  display: grid;
+  align-content: center;
 }
 
 .search-input {
@@ -34,6 +36,7 @@
   color: #333;
   border: none;
   outline: none;
+  font-family: 'Noto Sans KR', serif;
 }
 
 .search-input::placeholder {

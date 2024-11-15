@@ -1,46 +1,67 @@
-.lost-post-card {
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+.LostPostListCard_all_layout {
   display: flex;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  gap: 10px;
-  padding: 10px;
+  justify-content: center;
 }
 
-.post-thumbnail {
+.LostPostListCard_all_size {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0px;
+}
+
+.LostPostListCard_text_layout {
+  display: grid;
+  align-content: stretch;
+  padding-right: 50px;
+  height: 90px;
+}
+
+.LostPostListCard_lostTime_layout {
+  display: grid;
+}
+
+.LostPostListCard_itemType {
+  font-size: 18px;
+  color: #333333;
+  font-weight: 700;
+}
+
+.LostPostListCard_pickupDate_pickupTime {
+  font-size: 13px;
+  color: #948a85;
+}
+
+.LostPostListCard_itemImg {
   width: 90px;
   height: 90px;
-  background-color: #ddd;
-  border-radius: 4px;
+  border-radius: 5px;
+}
+
+.LostPostListCard_placeholder {
+  font-size: 14px;
+  color: #888;
+  background-color: #f4f5f6;
+  border-radius: 5px;
+  text-align: center;
+  width: 90px;
+  height: 90px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.post-thumbnail img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-  border-radius: 4px;
+.LostPostListCard_lostLocation_layout {
+  display: flex;
+  align-items: center;
 }
 
-.placeholder {
-  font-size: 14px;
-  color: #888;
-  text-align: center;
-}
-
-.post-info h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.post-info p {
-  margin: 4px 0;
-  color: #888;
-}
-
-.post-location {
-  color: red; /* 위치 텍스트 빨간색 */
+.LostPostListCard_storageLocation {
+  font-size: 12px;
+  margin-left: 5px;
+  color: #ff3535;
+  font-weight: 700;
+  letter-spacing: -1px;
 }

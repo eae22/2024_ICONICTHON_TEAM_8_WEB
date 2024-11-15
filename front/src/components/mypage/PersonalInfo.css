@@ -19,6 +19,9 @@
   height: 130px;
   background-color: #f4f5f6;
   border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .PersonalInfo_real_image1 {
