@@ -45,9 +45,9 @@ router.get("/information", (req, res) => {
 
                 res.status(200).json({
                   id: user.StudentID,
-                  name: user.Name,
-                  major: user.Major,
-                  state: user.State,
+                  name: user.name,
+                  major: user.major,
+                  state: user.state,
                   userImage: base64Image, // 리사이즈된 Base64 이미지 데이터
                 });
               })
@@ -59,9 +59,9 @@ router.get("/information", (req, res) => {
             // 이미지가 없을 경우
             res.status(200).json({
               id: user.StudentID,
-              name: user.Name,
-              major: user.Major,
-              state: user.State,
+              name: user.name,
+              major: user.major,
+              state: user.state,
               userImage: null,
             });
           }

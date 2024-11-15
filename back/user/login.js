@@ -1,6 +1,5 @@
 // login.js - Router file
 const express = require("express");
-const bcrypt = require("bcrypt");
 const router = express.Router();
 const mysql = require("mysql");
 const db_config = require("../config/db_config.json");
@@ -32,7 +31,7 @@ router.post("/process/login", (req, res) => {
     conn.query(
       "SELECT * FROM users WHERE StudentID = ?",
       [studentID],
-      async (err, rows) => {
+      (err, rows) => {
         conn.release();
         if (err) {
           console.error("Query Error", err);
@@ -42,27 +41,31 @@ router.post("/process/login", (req, res) => {
 
         if (rows.length > 0) {
           const user = rows[0];
-          const match = await bcrypt.compare(password, user.Password);
-
-          if (match) {
+          if (password === user.password) {
             console.log(
               "로그인 성공 - 이름: [%s], 학번: [%s], 상태: [%s]",
-              user.Name,
+              user.name,
               user.StudentID,
-              user.State
+              user.state
             );
 
             req.session.user = {
               id: user.StudentID,
-              name: user.Name,
-              major: user.Major,
-              state: user.State,
+              name: user.name,
+              major: user.major,
+              state: user.state,
               authorized: true,
             };
 
             res.json({ success: true, message: "로그인 성공" });
           } else {
             console.log("비밀번호 불일치");
+            console.log(
+              "입력된 비밀번호:",
+              password,
+              "DB 비밀번호:",
+              user.password
+            );
             res.status(401).json({
               success: false,
               message: "비밀번호가 일치하지 않습니다.",
