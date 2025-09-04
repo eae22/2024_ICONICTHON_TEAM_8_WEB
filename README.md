@@ -1,2 +1,2 @@
-# 2024_ICONICTHON_TEAM_8_BE
-[8조] 날찾아조 BE 레포지토리
+# 2024_ICONICTHON_TEAM_8_WEB
+[8조] 날찾아조 WEB 레포지토리
